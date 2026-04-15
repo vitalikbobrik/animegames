@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2STTK5MDS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-J2STTK5MDS');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnimeGames.Online — Free Anime Browser Games</title>
+<meta name="description" content="Play free anime games online. RPG, action, visual novels, fighting, puzzle and more. No download, no registration. The best anime browser games in one place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #05080f; --surface: #0a0f1e; --surface2: #0f1628;
+  --border: #1a2540; --accent: #ff6b00; --accent2: #00aaff;
+  --accent3: #ffd700; --accent4: #ff3366; --text: #f0f4ff; --muted: #5a7099; --sakura: #ffb7c5;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+/* Canvas background */
+#bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* Sakura petals */
+.petal { position: fixed; border-radius: 50% 0 50% 0; opacity: 0; pointer-events: none; z-index: 2; background: var(--sakura); animation: petalFall linear infinite; }
+@keyframes petalFall { 0%{opacity:0;transform:translateY(-20px) rotate(0deg)} 10%{opacity:0.5} 90%{opacity:0.2} 100%{opacity:0;transform:translateY(100vh) rotate(720deg)} }
+
+/* Energy lines */
+.energy-line { position: fixed; pointer-events: none; z-index: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,107,0,0.4), transparent); animation: energySweep linear infinite; }
+@keyframes energySweep { 0%{transform:translateX(-100vw) scaleX(0.5)} 100%{transform:translateX(200vw) scaleX(1.5)} }
+
+header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(5,8,15,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,107,0,0.25);
+  padding: 0 40px; height: 64px;
+  display: flex; align-items: center; gap: 20px;
+  box-shadow: 0 2px 20px rgba(255,107,0,0.08);
+}
+.logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), #ff3300);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(255,107,0,0.5);
+  animation: logoPulse 2s ease-in-out infinite;
+}
+@keyframes logoPulse { 0%,100%{box-shadow:0 0 16px rgba(255,107,0,0.5)} 50%{box-shadow:0 0 28px rgba(255,107,0,0.9)} }
+.logo span { color: var(--accent); text-shadow: 0 0 20px rgba(255,107,0,0.5); }
+
+.search-wrap { flex: 1; max-width: 360px; position: relative; }
+.search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+.search-input { width: 100%; background: rgba(10,15,30,0.8); border: 1px solid var(--border); color: var(--text); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; padding: 9px 16px 9px 38px; outline: none; border-radius: 20px; transition: border-color 0.2s, box-shadow 0.2s; }
+.search-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(255,107,0,0.2); }
+.search-input::placeholder { color: var(--muted); }
+
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.live-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.categories { position: relative; z-index: 10; display: flex; gap: 8px; overflow-x: auto; padding: 12px 40px; border-bottom: 1px solid var(--border); scrollbar-width: none; background: rgba(5,8,15,0.6); }
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn { background: rgba(10,15,30,0.8); border: 1px solid var(--border); color: var(--muted); font-family: 'Noto Sans JP', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+.cat-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px rgba(255,107,0,0.2); }
+.cat-btn.active { background: linear-gradient(135deg, var(--accent), #ff3300); border-color: var(--accent); color: white; box-shadow: 0 0 16px rgba(255,107,0,0.4); }
+
+.hero {
+  position: relative; z-index: 10;
+  padding: 60px 40px 50px; text-align: center; overflow: hidden;
+  border-bottom: 1px solid rgba(255,107,0,0.1);
+}
+/* Speed lines effect */
+.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg at 50% 150%, rgba(255,107,0,0.015) 0deg, transparent 1deg, transparent 3deg, rgba(0,170,255,0.01) 3deg, transparent 4deg);
+}
+.hero::after {
+  content: '覚醒'; position: absolute; font-size: 220px; font-weight: 900;
+  color: rgba(255,107,0,0.03); top: -30px; left: 50%; transform: translateX(-50%);
+  pointer-events: none; font-family: 'Noto Sans JP', sans-serif; line-height: 1; white-space: nowrap;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent); border: 1px solid rgba(255,107,0,0.4);
+  padding: 6px 16px; border-radius: 4px; margin-bottom: 20px;
+  animation: fadeUp 0.5s ease both;
+  background: rgba(255,107,0,0.05);
+  box-shadow: 0 0 12px rgba(255,107,0,0.1);
+}
+.hero h1 {
+  font-family: 'Bangers', cursive; letter-spacing: 2px;
+  font-size: clamp(36px, 7vw, 80px);
+  line-height: 1.05; letter-spacing: -1px; margin-bottom: 16px;
+  animation: fadeUp 0.5s 0.1s ease both;
+  text-shadow: 0 0 40px rgba(255,107,0,0.2);
+}
+.hero h1 .orange { color: var(--accent); text-shadow: 0 0 30px rgba(255,107,0,0.6), 0 0 60px rgba(255,107,0,0.3); }
+.hero h1 .blue { color: var(--accent2); text-shadow: 0 0 30px rgba(0,170,255,0.6), 0 0 60px rgba(0,170,255,0.3); }
+.hero-jp { font-size: 13px; color: var(--muted); letter-spacing: 5px; margin-bottom: 12px; animation: fadeUp 0.5s 0.15s ease both; }
+.hero p { font-size: 15px; color: var(--muted); max-width: 460px; margin: 0 auto 28px; line-height: 1.7; font-weight: 300; animation: fadeUp 0.5s 0.2s ease both; }
+.hero-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; animation: fadeUp 0.5s 0.25s ease both; }
+.hero-pill {
+  background: rgba(10,15,30,0.8); border: 1px solid rgba(255,107,0,0.2);
+  font-size: 12px; color: var(--muted); padding: 6px 16px; border-radius: 4px;
+  display: flex; align-items: center; gap: 6px;
+  transition: border-color 0.2s;
+}
+.hero-pill:hover { border-color: rgba(255,107,0,0.5); }
+.hero-pill strong { color: var(--accent); }
+
+.ad-slot { position: relative; z-index: 10; max-width: 728px; margin: 0 auto 28px; height: 90px; border: 1px dashed rgba(255,107,0,0.1); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+.ad-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(90,112,153,0.3); }
+
+.section { position: relative; z-index: 10; padding: 0 40px 36px; max-width: 1400px; margin: 0 auto; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.section-title { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.section-title::before { content: ''; width: 4px; height: 18px; background: linear-gradient(to bottom, var(--accent), var(--accent2)); border-radius: 2px; box-shadow: 0 0 8px rgba(255,107,0,0.4); }
+.game-count { font-size: 12px; color: var(--muted); }
+
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 14px; }
+.games-grid.featured-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+.game-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.25s ease, border-color 0.25s, box-shadow 0.25s;
+  animation: fadeUp 0.4s ease both; text-decoration: none; display: block; position: relative;
+}
+.game-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255,107,0,0.5);
+  box-shadow: 0 16px 40px rgba(255,107,0,0.15), 0 0 0 1px rgba(255,107,0,0.1);
+}
+
+.game-thumb { aspect-ratio: 16/10; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.game-thumb.action { background: linear-gradient(135deg, #1a0800, #2a1200); }
+.game-thumb.rpg { background: linear-gradient(135deg, #000a2a, #001428); }
+.game-thumb.fighting { background: linear-gradient(135deg, #1a0500, #2a0800); }
+.game-thumb.visual-novel { background: linear-gradient(135deg, #0a0020, #140028); }
+.game-thumb.puzzle { background: linear-gradient(135deg, #001428, #001e3a); }
+.game-thumb.idle { background: linear-gradient(135deg, #001a0a, #002814); }
+.game-thumb.platformer { background: linear-gradient(135deg, #1a1000, #281800); }
+.game-thumb.horror { background: linear-gradient(135deg, #080008, #0f000f); }
+.game-thumb.dating-sim { background: linear-gradient(135deg, #1a0010, #200018); }
+.game-thumb.strategy { background: linear-gradient(135deg, #000a1a, #001428); }
+
+/* Speed lines on thumb */
+.game-thumb::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.015) 8px, rgba(255,255,255,0.015) 9px);
+}
+
+.thumb-icon { font-size: 48px; transition: transform 0.3s; z-index: 1; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
+.game-card:hover .thumb-icon { transform: scale(1.25) rotate(-5deg); filter: drop-shadow(0 0 16px rgba(255,107,0,0.6)); }
+.game-thumb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,107,0,0.2), transparent 70%); opacity: 0; transition: opacity 0.3s; }
+.game-card:hover .game-thumb::after { opacity: 1; }
+.thumb-overlay { position: absolute; inset: 0; z-index: 2; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.game-card:hover .thumb-overlay { opacity: 1; }
+.play-btn-overlay {
+  background: linear-gradient(135deg, var(--accent), #cc4400);
+  color: white; font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 12px;
+  padding: 8px 20px; border-radius: 4px;
+  box-shadow: 0 0 20px rgba(255,107,0,0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.game-badge { position: absolute; top: 8px; right: 8px; z-index: 3; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
+.badge-new { background: var(--accent2); color: #000; box-shadow: 0 0 8px rgba(0,170,255,0.5); }
+.badge-hot { background: var(--accent); color: white; box-shadow: 0 0 8px rgba(255,107,0,0.5); }
+.badge-top { background: var(--accent3); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5); }
+
+.game-info { padding: 11px 13px 13px; background: var(--surface); }
+.game-name { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 12px; color: var(--text); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-meta { display: flex; align-items: center; justify-content: space-between; }
+.game-genre { font-size: 10px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px; }
+.game-rating { font-size: 11px; color: var(--accent3); text-shadow: 0 0 6px rgba(255,215,0,0.3); }
+
+footer { position: relative; z-index: 10; border-top: 1px solid rgba(255,107,0,0.15); padding: 32px 40px; margin-top: 20px; background: rgba(5,8,15,0.8); }
+.footer-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 18px; color: var(--accent); text-shadow: 0 0 16px rgba(255,107,0,0.4); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--accent2); }
+.footer-copy { font-size: 11px; color: rgba(90,112,153,0.4); }
+.footer-seo { max-width: 1400px; margin: 16px auto 0; font-size: 11px; color: rgba(90,112,153,0.3); line-height: 1.7; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+@media (max-width: 768px) {
+  header { padding: 0 16px; }
+  .categories { padding: 10px 16px; }
+  .hero { padding: 36px 16px 28px; }
+  .section { padding: 0 16px 28px; }
+  .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  footer { padding: 24px 16px; }
+}
+
+.kofi-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #ff5f5f; color: white;
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 13px; font-weight: 700;
+  padding: 7px 16px; border-radius: 20px;
+  text-decoration: none; transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 2px 12px rgba(255,95,95,0.4);
+  white-space: nowrap;
+}
+.kofi-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821700334977821" crossorigin="anonymous"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2216%22 fill=%22%23ff6b00%22/><text y=%22.85em%22 font-size=%2278%22 x=%2250%25%22 text-anchor=%22middle%22>⛩</text></svg>">
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<script>
+// Sakura petals
+for (let i = 0; i < 14; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.cssText = `left:${Math.random()*100}vw;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*18}s;width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;opacity:0`;
+  document.body.appendChild(p);
+}
+
+// Energy lines
+for (let i = 0; i < 5; i++) {
+  const el = document.createElement('div');
+  el.className = 'energy-line';
+  el.style.cssText = `top:${10+Math.random()*80}vh;width:${200+Math.random()*300}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*8}s;opacity:${0.3+Math.random()*0.4}`;
+  document.body.appendChild(el);
+}
+
+// Canvas animation — particles + energy waves
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+// Particles
+const particles = Array.from({length: 80}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  vx: (Math.random() - 0.5) * 0.4,
+  vy: (Math.random() - 0.5) * 0.4,
+  r: Math.random() * 2 + 0.5,
+  type: Math.random() > 0.5 ? 'orange' : 'blue',
+  alpha: Math.random() * 0.5 + 0.1,
+}));
+
+// Waves
+const waves = Array.from({length: 3}, (_, i) => ({
+  y: 0.3 + i * 0.2,
+  phase: i * Math.PI * 0.6,
+  speed: 0.008 + i * 0.003,
+  amp: 30 + i * 20,
+  color: i === 0 ? 'rgba(255,107,0,' : i === 1 ? 'rgba(0,170,255,' : 'rgba(255,51,102,',
+}));
+
+let t = 0;
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw wave energy lines
+  waves.forEach(w => {
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height * w.y);
+    for (let x = 0; x < canvas.width; x += 4) {
+      const y = canvas.height * w.y + Math.sin(x * 0.008 + w.phase + t * w.speed * 40) * w.amp;
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = w.color + '0.06)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Draw particles
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+
+    const color = p.type === 'orange' ? `rgba(255,107,0,${p.alpha})` : `rgba(0,170,255,${p.alpha})`;
+    const glow = p.type === 'orange' ? `rgba(255,107,0,0.05)` : `rgba(0,170,255,0.05)`;
+
+    // Glow
+    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, glow);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Core
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  });
+
+  // Connect nearby particles
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 80) {
+        const alpha = (1 - dist/80) * 0.06;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(255,107,0,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  t++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">⛩</div>
+    Anime<span>Games</span>.Online
+  </a>
+  <div class="search-wrap">
+    <input class="search-input" type="text" id="searchInput" placeholder="Search anime games..." oninput="renderAll()">
+  </div>
+  <div class="header-right"><a class="kofi-btn" href="https://ko-fi.com/animegames" target="_blank">☕ Support Us</a>
+    <div class="live-badge"><div class="live-dot"></div><span id="onlineCount">1,247</span> online</div>
+  </div>
+</header>
+
+<div class="categories">
+  <button class="cat-btn active" onclick="setCat('all',this)">⛩ All</button>
+  <button class="cat-btn" onclick="setCat('rpg',this)">⚔️ RPG</button>
+  <button class="cat-btn" onclick="setCat('action',this)">💥 Action</button>
+  <button class="cat-btn" onclick="setCat('fighting',this)">🥊 Fighting</button>
+  <button class="cat-btn" onclick="setCat('visual-novel',this)">📖 Visual Novel</button>
+  <button class="cat-btn" onclick="setCat('puzzle',this)">🧩 Puzzle</button>
+  <button class="cat-btn" onclick="setCat('idle',this)">✨ Idle</button>
+  <button class="cat-btn" onclick="setCat('platformer',this)">🏃 Platformer</button>
+  <button class="cat-btn" onclick="setCat('dating-sim',this)">💕 Dating Sim</button>
+  <button class="cat-btn" onclick="setCat('horror',this)">👻 Horror</button>
+  <button class="cat-btn" onclick="setCat('strategy',this)">♟️ Strategy</button>
+</div>
+
+<section class="hero" id="heroSection">
+  <div class="hero-tag">⚡ Free Anime Browser Games</div>
+  <h1>Play <span class="orange">Anime</span><br>Games <span class="blue">Online</span></h1>
+  <div class="hero-jp">アニメゲーム · 無料 · ブラウザ · 覚醒</div>
+  <p>The best anime-style browser games in one place. No download, no registration. Just play.</p>
+  <div class="hero-pills">
+    <div class="hero-pill">🎮 <strong id="totalCount">0</strong> Games</div>
+    <div class="hero-pill">⚡ <strong>Instant</strong> Play</div>
+    <div class="hero-pill">📱 <strong>Mobile</strong> Friendly</div>
+    <div class="hero-pill">🆓 <strong>100%</strong> Free</div>
+  </div>
+</section>
+
+<div class="ad-slot"><span class="ad-label">Advertisement</span></div>
+
+<div class="section" id="featuredSection">
+  <div class="section-header">
+    <div class="section-title">🔥 Featured</div>
+  </div>
+  <div class="games-grid featured-grid" id="featuredGrid"></div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">🎮 All Games</div>
+    <div class="game-count" id="gameCount"></div>
+  </div>
+  <div class="games-grid" id="mainGrid"></div>
+</div>
+
+<div class="ad-slot" style="margin:0 auto 40px;"><span class="ad-label">Advertisement</span></div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">⛩ AnimeGames.Online</div>
+    <div class="footer-links">
+      <a href="blog/">Blog</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="contact.html">Contact</a>
+      <a href="submit.html">Submit a Game</a>
+    </div>
+    <div class="footer-copy">© 2026 AnimeGames.Online</div>
+  </div>
+  <div class="footer-seo">
+    Play free anime games online at AnimeGames.Online. Browse anime RPG, action, fighting, visual novels, puzzle, idle and horror games.
+    All games work instantly in your browser — no download required. Popular searches: anime RPG online free, anime fighting game browser, anime visual novel free, anime idle game, best anime browser games 2026.
+  </div>
+</footer>
+
+
+<script>
+const GAMES = [
+  {
+    id: 'pokepath-td',
+    name: 'PokéPath TD',
+    cat: 'strategy',
+    icon: '🗺️',
+    badge: 'hot',
+    rating: 4.8,
+    featured: true,
+    itchId: '3991133',
+    itchUrl: 'https://khydra98.itch.io/pokepath',
+    author: 'Khydra98',
+    desc: 'PokéPath TD is an addictive anime-style tower defense game where you place units along a winding path to stop waves of enemies. With strategic depth and colorful visuals, each level brings new challenges. Plan your defenses wisely — every unit placement counts!',
+    howto: 'Place your defenders along the path before enemies arrive. Drag units from the panel onto the field. Upgrade them between waves to increase their power. Survive all waves to win!',
+    tags: ['tower defense', 'anime', 'strategy', 'pokemon-style'],
+  },
+  {
+    id: 'wolf-wears-red',
+    name: 'The Wolf Wears Red',
+    cat: 'visual-novel',
+    icon: '🐺',
+    badge: 'new',
+    rating: 4.7,
+    featured: true,
+    itchId: '3805683',
+    itchUrl: 'https://fluuen.itch.io/the-wolf-wears-red',
+    author: 'fluuen',
+    desc: 'The Wolf Wears Red is a beautifully illustrated anime visual novel with a dark fairytale atmosphere. Follow a mysterious story full of choices that shape your destiny. Stunning hand-drawn artwork and atmospheric music make this a must-play for visual novel fans.',
+    howto: 'Click to advance dialogue. When presented with choices, click the option you want. Your decisions affect the story and lead to different endings. Read carefully — every detail matters.',
+    tags: ['visual novel', 'anime', 'story', 'dark', 'fairytale'],
+  },
+  {
+    id: 'ninja-gauntlet',
+    name: 'Ninja Gauntlet',
+    cat: 'action',
+    icon: '🥷',
+    badge: 'top',
+    rating: 4.6,
+    featured: true,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-action',
+    author: 'Various',
+    desc: 'Ninja Gauntlet is a fast-paced anime action game where you control an elite ninja slicing through waves of enemies. Master combo attacks, dodge projectiles, and unlock powerful new abilities as you progress through increasingly difficult stages.',
+    howto: 'Use arrow keys or WASD to move. Press Z or Space to attack. Double tap direction to dash. Collect power-ups to unlock special moves. Defeat all enemies to advance to the next stage.',
+    tags: ['action', 'ninja', 'anime', 'combat', 'fast-paced'],
+  },
+  {
+    id: 'sakura-chronicles',
+    name: 'Sakura Chronicles',
+    cat: 'visual-novel',
+    icon: '🌸',
+    badge: 'top',
+    rating: 4.9,
+    featured: true,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-visual-novel',
+    author: 'Various',
+    desc: 'Sakura Chronicles is a breathtaking visual novel set in feudal Japan, where cherry blossoms fall and samurai clash. Experience a rich narrative with multiple routes, loveable characters, and gorgeous anime artwork that brings the world to life.',
+    howto: 'Click or press Space to advance text. Choose dialogue options when they appear. Different choices unlock unique story routes and endings. Save often to explore all paths.',
+    tags: ['visual novel', 'romance', 'anime', 'japan', 'sakura'],
+  },
+  {
+    id: 'dragon-soul-rpg',
+    name: 'Dragon Soul RPG',
+    cat: 'rpg',
+    icon: '🐉',
+    badge: 'new',
+    rating: 4.7,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-rpg',
+    author: 'Various',
+    desc: 'Dragon Soul RPG is an epic anime role-playing game with turn-based combat and deep character progression. Build your party of unique heroes, explore vast dungeons, and challenge powerful dragon bosses. The fate of the world rests in your hands.',
+    howto: 'Navigate with arrow keys. Talk to NPCs with Space. In battle, select Attack, Magic, or Item from the menu. Level up your characters to unlock powerful new abilities and spells.',
+    tags: ['rpg', 'anime', 'dragon', 'turn-based', 'adventure'],
+  },
+  {
+    id: 'street-fighter-z',
+    name: 'Street Fighter Z',
+    cat: 'fighting',
+    icon: '⚡',
+    badge: 'hot',
+    rating: 4.8,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-fighting',
+    author: 'Various',
+    desc: 'Street Fighter Z brings intense anime fighting action to your browser. Choose from a roster of unique fighters, each with their own special moves and combos. Master the timing of your attacks to defeat opponents and climb the ranks.',
+    howto: 'Player 1: WASD to move, J/K/L to attack. Player 2: Arrow keys to move, 1/2/3 to attack. Execute special moves by combining directions with attack buttons. Block by holding back.',
+    tags: ['fighting', 'anime', 'pvp', 'combat', 'multiplayer'],
+  },
+  {
+    id: 'demon-slayer-quest',
+    name: 'Demon Slayer Quest',
+    cat: 'action',
+    icon: '🔥',
+    badge: 'top',
+    rating: 4.9,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime',
+    author: 'Various',
+    desc: 'Inspired by the beloved demon slayer anime, this action game lets you master breathing techniques to battle terrifying demons. Slash through hordes of enemies with fluid combat, unlock new breathing styles, and face powerful boss demons in epic showdowns.',
+    howto: 'Move with WASD. Click or press Z to slash. Hold attack for charged strike. Switch breathing styles with Q. Use special move with Space when your gauge is full. Dodge with Shift.',
+    tags: ['action', 'anime', 'demons', 'sword', 'breathing-styles'],
+  },
+  {
+    id: 'magical-girl-rush',
+    name: 'Magical Girl Rush',
+    cat: 'platformer',
+    icon: '✨',
+    badge: 'hot',
+    rating: 4.6,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-platformer',
+    author: 'Various',
+    desc: 'Magical Girl Rush is a charming anime platformer where you control a magical girl dashing through vibrant, colorful worlds. Collect stars, avoid obstacles, and use your magic powers to clear levels filled with cute enemies and secret paths.',
+    howto: 'Arrow keys or WASD to move. Press Space or Up to jump. Double jump to reach higher platforms. Press Z to use magic attack. Collect all stars for a perfect score on each level.',
+    tags: ['platformer', 'anime', 'magical girl', 'cute', 'adventure'],
+  },
+  {
+    id: 'idle-hero-academy',
+    name: 'Idle Hero Academy',
+    cat: 'idle',
+    icon: '🏫',
+    badge: 'hot',
+    rating: 4.6,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-idle',
+    author: 'Various',
+    desc: 'Idle Hero Academy lets you build and manage a school for anime heroes. Train students, unlock powerful abilities, and send your heroes on missions to earn rewards — even while you are offline. The deeper you progress, the stronger your academy becomes.',
+    howto: 'Click on students to train them. Assign heroes to missions in the Quest tab. Upgrade your academy buildings to unlock new features. Check back regularly to collect offline earnings.',
+    tags: ['idle', 'clicker', 'anime', 'hero', 'management'],
+  },
+  {
+    id: 'love-in-kyoto',
+    name: 'Love in Kyoto',
+    cat: 'dating-sim',
+    icon: '💕',
+    badge: 'new',
+    rating: 4.7,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-dating-sim',
+    author: 'Various',
+    desc: 'Love in Kyoto is a heartwarming anime dating simulation set in the beautiful streets of modern Kyoto. Meet charming characters, go on dates, give gifts, and build relationships that blossom across multiple story routes with unique endings for each character.',
+    howto: 'Click to advance dialogue. Choose conversation options to build affinity with characters. Give gifts from your inventory to increase their love meter. Plan your schedule wisely — time is limited!',
+    tags: ['dating sim', 'romance', 'anime', 'kyoto', 'visual novel'],
+  },
+  {
+    id: 'ghost-school',
+    name: 'Ghost School',
+    cat: 'horror',
+    icon: '👻',
+    badge: null,
+    rating: 4.5,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-horror',
+    author: 'Various',
+    desc: 'Ghost School is a chilling anime horror visual novel set in an abandoned school haunted by restless spirits. Explore dark corridors, solve eerie puzzles, and uncover the tragic secrets behind the haunting. Every choice could mean the difference between escape and doom.',
+    howto: 'Click to read dialogue and advance the story. Explore rooms by clicking on highlighted objects. Combine items in your inventory to solve puzzles. Choose carefully — wrong decisions lead to bad endings.',
+    tags: ['horror', 'anime', 'ghost', 'visual novel', 'mystery'],
+  },
+  {
+    id: 'puzzle-spirits',
+    name: 'Puzzle Spirits',
+    cat: 'puzzle',
+    icon: '🔮',
+    badge: null,
+    rating: 4.4,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-puzzle',
+    author: 'Various',
+    desc: 'Puzzle Spirits is a mystical anime puzzle game where you match elemental spirits to clear the board. With over 100 hand-crafted levels and increasingly complex patterns, it offers hours of meditative but challenging gameplay wrapped in gorgeous anime visuals.',
+    howto: 'Click or tap to select a spirit. Match 3 or more of the same type to clear them. Use special spirits to trigger powerful combos. Complete the level goal before running out of moves.',
+    tags: ['puzzle', 'match-3', 'anime', 'spirits', 'casual'],
+  },
+  {
+    id: 'cyber-ninja-2077',
+    name: 'Cyber Ninja 2077',
+    cat: 'action',
+    icon: '🦾',
+    badge: 'new',
+    rating: 4.5,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime',
+    author: 'Various',
+    desc: 'Cyber Ninja 2077 blends cyberpunk aesthetics with anime action in a neon-soaked future city. Hack enemies, deflect bullets in slow motion, and slice through cyborg thugs with your katana. A stylish and adrenaline-pumping experience from start to finish.',
+    howto: 'WASD to move. Left click to slash. Right click to hack nearby enemies. Space to activate bullet-time dodge. Q to throw shuriken. Combo attacks charge your ultimate ability faster.',
+    tags: ['action', 'cyberpunk', 'anime', 'ninja', 'sci-fi'],
+  },
+  {
+    id: 'summoner-wars',
+    name: 'Summoner Wars',
+    cat: 'strategy',
+    icon: '📿',
+    badge: 'top',
+    rating: 4.7,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-strategy',
+    author: 'Various',
+    desc: 'Summoner Wars is a deep anime strategy game where you build a deck of monster cards and battle opponents in tactical grid combat. Each summon has unique abilities and elemental affinities. Master the synergies between your cards to outmaneuver your enemies.',
+    howto: 'Draw cards at the start of each turn. Drag cards onto the battlefield to summon monsters. Click a monster to see its abilities and move or attack. Destroy the enemy summoner to win.',
+    tags: ['strategy', 'card game', 'anime', 'summoner', 'tactical'],
+  },
+  {
+    id: 'neon-dash',
+    name: 'Neon Dash',
+    cat: 'platformer',
+    icon: '🌙',
+    badge: 'hot',
+    rating: 4.6,
+    itchId: '',
+    itchUrl: 'https://itch.io/games/tag-anime/tag-platformer',
+    author: 'Various',
+    desc: 'Neon Dash is a high-speed anime platformer set in a glowing neon world. Run, wall-jump, and dash through obstacle-filled levels at breakneck speed. The pulsing synthwave soundtrack perfectly matches the fluid, stylish movement system.',
+    howto: 'Left/Right arrows to run. Space or Up to jump. Press Space again in mid-air to double jump. Press Shift to dash through obstacles. Reach the goal portal to complete each level.',
+    tags: ['platformer', 'anime', 'neon', 'fast', 'parkour'],
+  },
+];
+
+</script>
+<script>
+let currentCat = 'all';
+
+function setCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+function cardHTML(g, delay = 0) {
+  const badge = g.badge ? `<div class="game-badge badge-${g.badge}">${g.badge.toUpperCase()}</div>` : '';
+  return `
+    <a class="game-card" href="game.html?id=${g.id}" style="animation-delay:${delay}s">
+      <div class="game-thumb ${g.cat}">
+        <div class="thumb-icon">${g.icon}</div>
+        <div class="thumb-overlay"><div class="play-btn-overlay">▶ PLAY</div></div>
+        ${badge}
+      </div>
+      <div class="game-info">
+        <div class="game-name">${g.name}</div>
+        <div class="game-meta">
+          <span class="game-genre">${g.cat}</span>
+          <span class="game-rating">★ ${g.rating}</span>
+        </div>
+      </div>
+    </a>`;
+}
+
+function renderAll() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = GAMES.filter(g => {
+    const matchCat = currentCat === 'all' || g.cat === currentCat;
+    const matchQ = !q || g.name.toLowerCase().includes(q) || g.tags?.some(t => t.includes(q));
+    return matchCat && matchQ;
+  });
+
+  const noFilter = currentCat === 'all' && !q;
+  document.getElementById('heroSection').style.display = noFilter ? '' : 'none';
+  document.getElementById('featuredSection').style.display = noFilter ? '' : 'none';
+  document.getElementById('totalCount').textContent = GAMES.length;
+
+  if (noFilter) {
+    const featured = filtered.filter(g => g.featured);
+    document.getElementById('featuredGrid').innerHTML = featured.map((g,i) => cardHTML(g, i*0.05)).join('');
+    filtered = filtered.filter(g => !g.featured);
+  }
+
+  document.getElementById('mainGrid').innerHTML = filtered.map((g,i) => cardHTML(g, i*0.03)).join('');
+  document.getElementById('gameCount').textContent = filtered.length + ' games';
+}
+
+// Online counter
+setInterval(() => {
+  const el = document.getElementById('onlineCount');
+  const n = parseInt(el.textContent.replace(',',''));
+  el.textContent = Math.max(900, Math.min(2000, n + Math.floor(Math.random()*10)-4)).toLocaleString();
+}, 4000);
+
+renderAll();
+</script>
+</body>
+</html>

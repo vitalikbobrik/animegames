@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Your Game — AnimeGames.Online</title>
+<meta name="description" content="Submit your anime game to AnimeGames.Online for free. Reach thousands of anime fans instantly.">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2STTK5MDS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-J2STTK5MDS');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821700334977821" crossorigin="anonymous"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2216%22 fill=%22%23ff6b00%22/><text y=%22.85em%22 font-size=%2278%22 x=%2250%25%22 text-anchor=%22middle%22>⛩</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #05080f; --surface: #0a0f1e; --surface2: #0f1628;
+  --border: #1a2540; --accent: #ff6b00; --accent2: #00aaff;
+  --text: #f0f4ff; --muted: #5a7099;
+}
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 20% 20%, rgba(255,107,0,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(0,170,255,0.04) 0%, transparent 50%);
+}
+
+header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(5,8,15,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,107,0,0.2);
+  padding: 0 40px; height: 64px;
+  display: flex; align-items: center;
+}
+.logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 22px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--accent), #ff3300); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 16px rgba(255,107,0,0.4); }
+.logo span { color: var(--accent); }
+
+main { position: relative; z-index: 10; max-width: 700px; margin: 0 auto; padding: 48px 24px 80px; }
+
+.page-hero { text-align: center; margin-bottom: 40px; }
+.page-title { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 56px; line-height: 1; margin-bottom: 12px; }
+.page-title span { color: var(--accent); text-shadow: 0 0 24px rgba(255,107,0,0.4); }
+.page-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 500px; margin: 0 auto; }
+
+.perks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 28px 0 36px; }
+.perk { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 12px; text-align: center; transition: border-color 0.2s; }
+.perk:hover { border-color: rgba(255,107,0,0.3); }
+.perk-icon { font-size: 28px; margin-bottom: 8px; }
+.perk-title { font-family: 'Bangers', cursive; letter-spacing: 1px; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+.perk-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+.rules-box { background: rgba(255,107,0,0.04); border: 1px solid rgba(255,107,0,0.2); border-radius: 8px; padding: 20px 24px; margin-bottom: 32px; }
+.rules-title { font-family: 'Bangers', cursive; letter-spacing: 1px; font-size: 16px; color: var(--accent); margin-bottom: 12px; }
+.rule { font-size: 13px; color: var(--muted); line-height: 1.6; display: flex; gap: 8px; margin-bottom: 6px; }
+.rule::before { content: '✓'; color: #22c55e; flex-shrink: 0; font-weight: 700; }
+.rule.no::before { content: '✗'; color: #ef4444; }
+
+.submit-form { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
+.form-title { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 22px; margin-bottom: 24px; }
+.form-group { margin-bottom: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+label { display: block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+label span { color: #ef4444; }
+
+input, textarea, select {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif; font-size: 14px;
+  padding: 11px 14px; outline: none; border-radius: 6px; transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255,107,0,0.15); }
+input::placeholder, textarea::placeholder { color: var(--muted); }
+textarea { height: 110px; resize: none; }
+select option { background: var(--surface2); }
+
+.checkbox-wrap { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; cursor: pointer; }
+.checkbox-wrap input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+
+.submit-btn {
+  width: 100%; background: linear-gradient(135deg, var(--accent), #cc4400);
+  color: white; border: none; font-family: 'Bangers', cursive; letter-spacing: 2px;
+  font-size: 20px; padding: 14px; border-radius: 6px; cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s; box-shadow: 0 4px 20px rgba(255,107,0,0.3); margin-top: 8px;
+}
+.submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.success-msg { display: none; text-align: center; padding: 40px 24px; }
+.success-msg .icon { font-size: 56px; margin-bottom: 16px; }
+.success-msg h3 { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 32px; color: var(--accent); margin-bottom: 8px; }
+.success-msg p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+footer { position: relative; z-index: 10; border-top: 1px solid rgba(255,107,0,0.1); padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.footer-logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 16px; color: var(--accent); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--accent2); }
+.footer-copy { font-size: 11px; color: rgba(90,112,153,0.4); }
+
+@media (max-width: 600px) {
+  header { padding: 0 16px; }
+  main { padding: 32px 16px 60px; }
+  .perks { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .submit-form { padding: 20px; }
+  footer { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-icon">⛩</div>
+    Anime<span>Games</span>.Online
+  </a>
+</header>
+
+<main>
+  <div class="page-hero">
+    <div class="page-title">Submit Your <span>Game</span></div>
+    <p class="page-sub">Are you an indie developer? List your anime game for free and reach thousands of players. No fees, no catches.</p>
+  </div>
+
+  <div class="perks">
+    <div class="perk">
+      <div class="perk-icon">🆓</div>
+      <div class="perk-title">100% Free</div>
+      <div class="perk-desc">No fees, no revenue share. Your game, your players.</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">⚡</div>
+      <div class="perk-title">Fast Review</div>
+      <div class="perk-desc">We review submissions within 48 hours.</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">🌍</div>
+      <div class="perk-title">Global Reach</div>
+      <div class="perk-desc">Players from all over the world discover your game.</div>
+    </div>
+  </div>
+
+  <div class="rules-box">
+    <div class="rules-title">⚡ Submission Rules</div>
+    <div class="rule">Game must be anime-style or Japanese-inspired</div>
+    <div class="rule">Must be playable in browser (HTML5)</div>
+    <div class="rule">Must be your original work or have proper license</div>
+    <div class="rule">Free to play (paid games not accepted)</div>
+    <div class="rule no">No games using copyrighted IP (Pokemon, Naruto, etc.)</div>
+    <div class="rule no">No adult or NSFW content</div>
+    <div class="rule no">No malware or malicious code</div>
+  </div>
+
+  <div class="submit-form">
+    <div class="form-title">🎮 Game Details</div>
+
+    <form id="submitForm" action="https://formspree.io/f/myklzapz" method="POST">
+      <input type="hidden" name="subject" value="New Game Submission">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="game_name">Game Name <span>*</span></label>
+          <input type="text" id="game_name" name="game_name" placeholder="My Awesome Game" required>
+        </div>
+        <div class="form-group">
+          <label for="genre">Genre <span>*</span></label>
+          <select id="genre" name="genre" required>
+            <option value="">Select genre...</option>
+            <option value="action">Action</option>
+            <option value="rpg">RPG</option>
+            <option value="fighting">Fighting</option>
+            <option value="visual-novel">Visual Novel</option>
+            <option value="puzzle">Puzzle</option>
+            <option value="idle">Idle</option>
+            <option value="platformer">Platformer</option>
+            <option value="horror">Horror</option>
+            <option value="dating-sim">Dating Sim</option>
+            <option value="strategy">Strategy</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="game_url">Game URL <span>*</span></label>
+        <input type="url" id="game_url" name="game_url" placeholder="https://yourname.itch.io/your-game" required>
+      </div>
+
+      <div class="form-group">
+        <label for="embed_url">Embed / Play URL</label>
+        <input type="url" id="embed_url" name="embed_url" placeholder="Direct play link if different from above">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Game Description <span>*</span></label>
+        <textarea id="description" name="description" placeholder="Describe your game in 2-3 sentences. What makes it fun? What's the story?" required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="developer">Developer Name <span>*</span></label>
+          <input type="text" id="developer" name="developer" placeholder="Your name or studio" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email <span>*</span></label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Additional Notes</label>
+        <input type="text" id="notes" name="notes" placeholder="Anything else we should know?">
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-wrap">
+          <input type="checkbox" name="agree" required>
+          I confirm this is my original game (or I have rights to it), it contains no copyrighted IP, and I agree to the submission rules above.
+        </label>
+      </div>
+
+      <button type="submit" class="submit-btn">⚡ Submit Game</button>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      <div class="icon">🎉</div>
+      <h3>Submitted!</h3>
+      <p>Thanks for submitting your game! We'll review it within 48 hours and get back to you at your email.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">⛩ AnimeGames.Online</div>
+  <div class="footer-links">
+    <a href="index.html">Games</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <div class="footer-copy">© 2025 AnimeGames.Online</div>
+</footer>
+
+<script>
+document.getElementById('submitForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.submit-btn');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      this.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    } else {
+      btn.textContent = '⚡ Submit Game';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+    }
+  } catch {
+    btn.textContent = '⚡ Submit Game';
+    btn.disabled = false;
+    alert('Something went wrong. Please try again.');
+  }
+});
+</script>
+</body>
+</html>
