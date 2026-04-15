@@ -12,332 +12,297 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AnimeGames.Online — Free Anime Browser Games</title>
-<meta name="description" content="Play free anime games online. RPG, action, visual novels, fighting, puzzle and more. No download, no registration. The best anime browser games in one place.">
+<meta name="description" content="Play free anime games online. RPG, action, visual novels, tower defense and more — all playable in your browser, no download needed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Noto+Sans+JP:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821700334977821" crossorigin="anonymous"></script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⛩</text></svg>">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #05080f; --surface: #0a0f1e; --surface2: #0f1628;
-  --border: #1a2540; --accent: #ff6b00; --accent2: #00aaff;
-  --accent3: #ffd700; --accent4: #ff3366; --text: #f0f4ff; --muted: #5a7099; --sakura: #ffb7c5;
+  --bg: #0d0d18;
+  --surface: #13131f;
+  --surface2: #1a1a2e;
+  --border: #2a2a45;
+  --accent: #ff6b9d;
+  --accent2: #c44dff;
+  --gold: #ffd700;
+  --text: #f0f0ff;
+  --text2: #9898b8;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5);
 }
-html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; overflow-x: hidden; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-/* Canvas background */
-#bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+/* Background canvas */
+#bgCanvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  opacity: 0.35;
+}
 
-/* Sakura petals */
-.petal { position: fixed; border-radius: 50% 0 50% 0; opacity: 0; pointer-events: none; z-index: 2; background: var(--sakura); animation: petalFall linear infinite; }
-@keyframes petalFall { 0%{opacity:0;transform:translateY(-20px) rotate(0deg)} 10%{opacity:0.5} 90%{opacity:0.2} 100%{opacity:0;transform:translateY(100vh) rotate(720deg)} }
-
-/* Energy lines */
-.energy-line { position: fixed; pointer-events: none; z-index: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,107,0,0.4), transparent); animation: energySweep linear infinite; }
-@keyframes energySweep { 0%{transform:translateX(-100vw) scaleX(0.5)} 100%{transform:translateX(200vw) scaleX(1.5)} }
-
+/* Header */
 header {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(5,8,15,0.95); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,107,0,0.25);
-  padding: 0 40px; height: 64px;
-  display: flex; align-items: center; gap: 20px;
-  box-shadow: 0 2px 20px rgba(255,107,0,0.08);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,24,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: center; gap: 16px;
+  height: 58px;
 }
-.logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 20px; color: var(--text); display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.logo-icon {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--accent), #ff3300);
-  border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-  box-shadow: 0 0 16px rgba(255,107,0,0.5);
-  animation: logoPulse 2s ease-in-out infinite;
-}
-@keyframes logoPulse { 0%,100%{box-shadow:0 0 16px rgba(255,107,0,0.5)} 50%{box-shadow:0 0 28px rgba(255,107,0,0.9)} }
-.logo span { color: var(--accent); text-shadow: 0 0 20px rgba(255,107,0,0.5); }
-
-.search-wrap { flex: 1; max-width: 360px; position: relative; }
-.search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
-.search-input { width: 100%; background: rgba(10,15,30,0.8); border: 1px solid var(--border); color: var(--text); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; padding: 9px 16px 9px 38px; outline: none; border-radius: 20px; transition: border-color 0.2s, box-shadow 0.2s; }
-.search-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(255,107,0,0.2); }
-.search-input::placeholder { color: var(--muted); }
-
-.header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
-.live-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
-.live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-.categories { position: relative; z-index: 10; display: flex; gap: 8px; overflow-x: auto; padding: 12px 40px; border-bottom: 1px solid var(--border); scrollbar-width: none; background: rgba(5,8,15,0.6); }
-.categories::-webkit-scrollbar { display: none; }
-.cat-btn { background: rgba(10,15,30,0.8); border: 1px solid var(--border); color: var(--muted); font-family: 'Noto Sans JP', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-.cat-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 8px rgba(255,107,0,0.2); }
-.cat-btn.active { background: linear-gradient(135deg, var(--accent), #ff3300); border-color: var(--accent); color: white; box-shadow: 0 0 16px rgba(255,107,0,0.4); }
-
-.hero {
-  position: relative; z-index: 10;
-  padding: 60px 40px 50px; text-align: center; overflow: hidden;
-  border-bottom: 1px solid rgba(255,107,0,0.1);
-}
-/* Speed lines effect */
-.hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: repeating-conic-gradient(from 0deg at 50% 150%, rgba(255,107,0,0.015) 0deg, transparent 1deg, transparent 3deg, rgba(0,170,255,0.01) 3deg, transparent 4deg);
-}
-.hero::after {
-  content: '覚醒'; position: absolute; font-size: 220px; font-weight: 900;
-  color: rgba(255,107,0,0.03); top: -30px; left: 50%; transform: translateX(-50%);
-  pointer-events: none; font-family: 'Noto Sans JP', sans-serif; line-height: 1; white-space: nowrap;
-}
-
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--accent); border: 1px solid rgba(255,107,0,0.4);
-  padding: 6px 16px; border-radius: 4px; margin-bottom: 20px;
-  animation: fadeUp 0.5s ease both;
-  background: rgba(255,107,0,0.05);
-  box-shadow: 0 0 12px rgba(255,107,0,0.1);
-}
-.hero h1 {
-  font-family: 'Bangers', cursive; letter-spacing: 2px;
-  font-size: clamp(36px, 7vw, 80px);
-  line-height: 1.05; letter-spacing: -1px; margin-bottom: 16px;
-  animation: fadeUp 0.5s 0.1s ease both;
-  text-shadow: 0 0 40px rgba(255,107,0,0.2);
-}
-.hero h1 .orange { color: var(--accent); text-shadow: 0 0 30px rgba(255,107,0,0.6), 0 0 60px rgba(255,107,0,0.3); }
-.hero h1 .blue { color: var(--accent2); text-shadow: 0 0 30px rgba(0,170,255,0.6), 0 0 60px rgba(0,170,255,0.3); }
-.hero-jp { font-size: 13px; color: var(--muted); letter-spacing: 5px; margin-bottom: 12px; animation: fadeUp 0.5s 0.15s ease both; }
-.hero p { font-size: 15px; color: var(--muted); max-width: 460px; margin: 0 auto 28px; line-height: 1.7; font-weight: 300; animation: fadeUp 0.5s 0.2s ease both; }
-.hero-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; animation: fadeUp 0.5s 0.25s ease both; }
-.hero-pill {
-  background: rgba(10,15,30,0.8); border: 1px solid rgba(255,107,0,0.2);
-  font-size: 12px; color: var(--muted); padding: 6px 16px; border-radius: 4px;
-  display: flex; align-items: center; gap: 6px;
-  transition: border-color 0.2s;
-}
-.hero-pill:hover { border-color: rgba(255,107,0,0.5); }
-.hero-pill strong { color: var(--accent); }
-
-.ad-slot { position: relative; z-index: 10; max-width: 728px; margin: 0 auto 28px; height: 90px; border: 1px dashed rgba(255,107,0,0.1); display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-.ad-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(90,112,153,0.3); }
-
-.section { position: relative; z-index: 10; padding: 0 40px 36px; max-width: 1400px; margin: 0 auto; }
-.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.section-title { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 10px; }
-.section-title::before { content: ''; width: 4px; height: 18px; background: linear-gradient(to bottom, var(--accent), var(--accent2)); border-radius: 2px; box-shadow: 0 0 8px rgba(255,107,0,0.4); }
-.game-count { font-size: 12px; color: var(--muted); }
-
-.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 14px; }
-.games-grid.featured-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-
-.game-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
-  overflow: hidden; cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s, box-shadow 0.25s;
-  animation: fadeUp 0.4s ease both; text-decoration: none; display: block; position: relative;
-}
-.game-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  border-color: rgba(255,107,0,0.5);
-  box-shadow: 0 16px 40px rgba(255,107,0,0.15), 0 0 0 1px rgba(255,107,0,0.1);
-}
-
-.game-thumb { aspect-ratio: 16/10; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.game-thumb.action { background: linear-gradient(135deg, #1a0800, #2a1200); }
-.game-thumb.rpg { background: linear-gradient(135deg, #000a2a, #001428); }
-.game-thumb.fighting { background: linear-gradient(135deg, #1a0500, #2a0800); }
-.game-thumb.visual-novel { background: linear-gradient(135deg, #0a0020, #140028); }
-.game-thumb.puzzle { background: linear-gradient(135deg, #001428, #001e3a); }
-.game-thumb.idle { background: linear-gradient(135deg, #001a0a, #002814); }
-.game-thumb.platformer { background: linear-gradient(135deg, #1a1000, #281800); }
-.game-thumb.horror { background: linear-gradient(135deg, #080008, #0f000f); }
-.game-thumb.dating-sim { background: linear-gradient(135deg, #1a0010, #200018); }
-.game-thumb.strategy { background: linear-gradient(135deg, #000a1a, #001428); }
-
-/* Speed lines on thumb */
-.game-thumb::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.015) 8px, rgba(255,255,255,0.015) 9px);
-}
-
-.thumb-icon { font-size: 48px; transition: transform 0.3s; z-index: 1; filter: drop-shadow(0 0 8px rgba(255,255,255,0.3)); }
-.game-card:hover .thumb-icon { transform: scale(1.25) rotate(-5deg); filter: drop-shadow(0 0 16px rgba(255,107,0,0.6)); }
-.game-thumb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,107,0,0.2), transparent 70%); opacity: 0; transition: opacity 0.3s; }
-.game-card:hover .game-thumb::after { opacity: 1; }
-.thumb-overlay { position: absolute; inset: 0; z-index: 2; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
-.game-card:hover .thumb-overlay { opacity: 1; }
-.play-btn-overlay {
-  background: linear-gradient(135deg, var(--accent), #cc4400);
-  color: white; font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 12px;
-  padding: 8px 20px; border-radius: 4px;
-  box-shadow: 0 0 20px rgba(255,107,0,0.5);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-
-.game-badge { position: absolute; top: 8px; right: 8px; z-index: 3; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
-.badge-new { background: var(--accent2); color: #000; box-shadow: 0 0 8px rgba(0,170,255,0.5); }
-.badge-hot { background: var(--accent); color: white; box-shadow: 0 0 8px rgba(255,107,0,0.5); }
-.badge-top { background: var(--accent3); color: #000; box-shadow: 0 0 8px rgba(255,215,0,0.5); }
-
-.game-info { padding: 11px 13px 13px; background: var(--surface); }
-.game-name { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 12px; color: var(--text); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.game-meta { display: flex; align-items: center; justify-content: space-between; }
-.game-genre { font-size: 10px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px; }
-.game-rating { font-size: 11px; color: var(--accent3); text-shadow: 0 0 6px rgba(255,215,0,0.3); }
-
-footer { position: relative; z-index: 10; border-top: 1px solid rgba(255,107,0,0.15); padding: 32px 40px; margin-top: 20px; background: rgba(5,8,15,0.8); }
-.footer-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-logo { font-family: 'Bangers', cursive; letter-spacing: 2px; font-size: 18px; color: var(--accent); text-shadow: 0 0 16px rgba(255,107,0,0.4); }
-.footer-links { display: flex; gap: 20px; }
-.footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-.footer-links a:hover { color: var(--accent2); }
-.footer-copy { font-size: 11px; color: rgba(90,112,153,0.4); }
-.footer-seo { max-width: 1400px; margin: 16px auto 0; font-size: 11px; color: rgba(90,112,153,0.3); line-height: 1.7; }
-
-@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-
-@media (max-width: 768px) {
-  header { padding: 0 16px; }
-  .categories { padding: 10px 16px; }
-  .hero { padding: 36px 16px 28px; }
-  .section { padding: 0 16px 28px; }
-  .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-  footer { padding: 24px 16px; }
-}
-
-.kofi-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  background: #ff5f5f; color: white;
-  font-family: "Noto Sans JP", sans-serif;
-  font-size: 13px; font-weight: 700;
-  padding: 7px 16px; border-radius: 20px;
-  text-decoration: none; transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 2px 12px rgba(255,95,95,0.4);
+.logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.5rem; letter-spacing: 1px;
+  color: var(--text); text-decoration: none;
   white-space: nowrap;
 }
+.logo span { color: var(--accent); }
+.logo-icon { font-size: 1.6rem; }
+.search-wrap { flex: 1; max-width: 380px; }
+.search-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 18px;
+  color: var(--text); font-size: 0.9rem;
+  outline: none; transition: border 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px; font-size: 0.8rem;
+  font-weight: 700; color: var(--text2);
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.kofi-btn {
+  background: linear-gradient(135deg, #ff5f5f, #ff9a5c);
+  color: #fff; border-radius: 999px;
+  padding: 6px 14px; font-size: 0.82rem;
+  font-weight: 800; text-decoration: none;
+  box-shadow: 0 2px 12px rgba(255,95,95,0.4);
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s;
+}
 .kofi-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* Hero */
+.hero {
+  position: relative; z-index: 1;
+  text-align: center; padding: 56px 20px 40px;
+}
+.hero h1 {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+.hero p { color: var(--text2); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+/* Category tabs */
+.categories {
+  position: relative; z-index: 1;
+  display: flex; gap: 8px; overflow-x: auto;
+  padding: 0 20px 4px;
+  scrollbar-width: none;
+}
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 16px; font-size: 0.82rem;
+  font-weight: 700; color: var(--text2);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.2s;
+}
+.cat-btn.active, .cat-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Main layout */
+main {
+  position: relative; z-index: 1;
+  max-width: 1280px; margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.stats-bar span { color: var(--text2); font-size: 0.85rem; }
+
+/* Featured grid */
+.section-title {
+  font-family: 'Bangers', cursive;
+  font-size: 1.5rem; letter-spacing: 1px;
+  color: var(--gold); margin-bottom: 16px;
+}
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; margin-bottom: 36px;
+}
+
+/* Game cards */
+.game-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  animation: fadeIn 0.4s ease both;
+  display: flex; flex-direction: column;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px rgba(255,107,157,0.2);
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+.card-thumb {
+  background: var(--surface2);
+  height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem;
+  position: relative;
+}
+.card-thumb.featured-thumb { height: 200px; }
+
+.badge {
+  position: absolute; top: 10px; right: 10px;
+  border-radius: 999px; padding: 3px 10px;
+  font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.badge-hot { background: #ff6b35; color: #fff; }
+.badge-new { background: var(--accent2); color: #fff; }
+.badge-top { background: var(--gold); color: #1a1a00; }
+
+.card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; }
+.card-name {
+  font-size: 0.95rem; font-weight: 800;
+  margin-bottom: 4px; color: var(--text);
+}
+.card-cat {
+  font-size: 0.75rem; color: var(--accent);
+  text-transform: uppercase; font-weight: 700;
+  letter-spacing: 0.5px; margin-bottom: 6px;
+}
+.card-desc {
+  font-size: 0.8rem; color: var(--text2);
+  line-height: 1.5; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px;
+}
+.rating { font-size: 0.8rem; color: var(--gold); font-weight: 700; }
+.play-btn {
+  background: var(--accent);
+  color: #fff; border: none; border-radius: 999px;
+  padding: 5px 14px; font-size: 0.78rem;
+  font-weight: 800; cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.play-btn:hover { opacity: 0.85; transform: scale(1.05); }
+
+/* Main grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* Footer */
+footer {
+  position: relative; z-index: 1;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text2); font-size: 0.85rem;
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+.footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  header { gap: 10px; }
+  .live-badge { display: none; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .main-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
 </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821700334977821" crossorigin="anonymous"></script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2216%22 fill=%22%23ff6b00%22/><text y=%22.85em%22 font-size=%2278%22 x=%2250%25%22 text-anchor=%22middle%22>⛩</text></svg>">
 </head>
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
 <script>
-// Sakura petals
-for (let i = 0; i < 14; i++) {
-  const p = document.createElement('div');
-  p.className = 'petal';
-  p.style.cssText = `left:${Math.random()*100}vw;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*18}s;width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;opacity:0`;
-  document.body.appendChild(p);
-}
-
-// Energy lines
-for (let i = 0; i < 5; i++) {
-  const el = document.createElement('div');
-  el.className = 'energy-line';
-  el.style.cssText = `top:${10+Math.random()*80}vh;width:${200+Math.random()*300}px;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*8}s;opacity:${0.3+Math.random()*0.4}`;
-  document.body.appendChild(el);
-}
-
-// Canvas animation — particles + energy waves
+// Sakura petals background
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-
-// Particles
-const particles = Array.from({length: 80}, () => ({
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * window.innerHeight,
+const petals = Array.from({length: 20}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 3 + 1.5,
   vx: (Math.random() - 0.5) * 0.4,
-  vy: (Math.random() - 0.5) * 0.4,
-  r: Math.random() * 2 + 0.5,
-  type: Math.random() > 0.5 ? 'orange' : 'blue',
-  alpha: Math.random() * 0.5 + 0.1,
-}));
-
-// Waves
-const waves = Array.from({length: 3}, (_, i) => ({
-  y: 0.3 + i * 0.2,
-  phase: i * Math.PI * 0.6,
-  speed: 0.008 + i * 0.003,
-  amp: 30 + i * 20,
-  color: i === 0 ? 'rgba(255,107,0,' : i === 1 ? 'rgba(0,170,255,' : 'rgba(255,51,102,',
+  vy: Math.random() * 0.6 + 0.2,
+  opacity: Math.random() * 0.5 + 0.2,
+  hue: Math.random() * 40 + 320
 }));
 
 let t = 0;
-
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw wave energy lines
-  waves.forEach(w => {
-    ctx.beginPath();
-    ctx.moveTo(0, canvas.height * w.y);
-    for (let x = 0; x < canvas.width; x += 4) {
-      const y = canvas.height * w.y + Math.sin(x * 0.008 + w.phase + t * w.speed * 40) * w.amp;
-      ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = w.color + '0.06)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  });
-
-  // Draw particles
-  particles.forEach(p => {
-    p.x += p.vx;
+  petals.forEach(p => {
+    p.x += p.vx + Math.sin(t * 0.01 + p.y * 0.01) * 0.3;
     p.y += p.vy;
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
-
-    const color = p.type === 'orange' ? `rgba(255,107,0,${p.alpha})` : `rgba(0,170,255,${p.alpha})`;
-    const glow = p.type === 'orange' ? `rgba(255,107,0,0.05)` : `rgba(0,170,255,0.05)`;
-
-    // Glow
-    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
-    grad.addColorStop(0, color);
-    grad.addColorStop(1, glow);
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Core
+    if (p.y > canvas.height + 10) { p.y = -10; p.x = Math.random() * canvas.width; }
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = color;
+    ctx.fillStyle = `hsla(${p.hue}, 80%, 80%, ${p.opacity})`;
     ctx.fill();
   });
-
-  // Connect nearby particles
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 80) {
-        const alpha = (1 - dist/80) * 0.06;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(255,107,0,${alpha})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-    }
-  }
-
   t++;
   requestAnimationFrame(draw);
 }
-
 draw();
 </script>
 
@@ -349,78 +314,48 @@ draw();
   <div class="search-wrap">
     <input class="search-input" type="text" id="searchInput" placeholder="Search anime games..." oninput="renderAll()">
   </div>
-  <div class="header-right"><a class="kofi-btn" href="https://ko-fi.com/animegames" target="_blank">☕ Support Us</a>
+  <div class="header-right">
+    <a class="kofi-btn" href="https://ko-fi.com/animegames" target="_blank">☕ Support Us</a>
     <div class="live-badge"><div class="live-dot"></div><span id="onlineCount">1,247</span> online</div>
   </div>
 </header>
 
 <div class="categories">
   <button class="cat-btn active" onclick="setCat('all',this)">⛩ All</button>
-  <button class="cat-btn" onclick="setCat('rpg',this)">⚔️ RPG</button>
-  <button class="cat-btn" onclick="setCat('action',this)">💥 Action</button>
-  <button class="cat-btn" onclick="setCat('fighting',this)">🥊 Fighting</button>
+  <button class="cat-btn" onclick="setCat('action',this)">⚔️ Action</button>
   <button class="cat-btn" onclick="setCat('visual-novel',this)">📖 Visual Novel</button>
-  <button class="cat-btn" onclick="setCat('puzzle',this)">🧩 Puzzle</button>
-  <button class="cat-btn" onclick="setCat('idle',this)">✨ Idle</button>
-  <button class="cat-btn" onclick="setCat('platformer',this)">🏃 Platformer</button>
   <button class="cat-btn" onclick="setCat('dating-sim',this)">💕 Dating Sim</button>
-  <button class="cat-btn" onclick="setCat('horror',this)">👻 Horror</button>
-  <button class="cat-btn" onclick="setCat('strategy',this)">♟️ Strategy</button>
+  <button class="cat-btn" onclick="setCat('strategy',this)">🗺️ Strategy</button>
+  <button class="cat-btn" onclick="setCat('casual',this)">🎮 Casual</button>
 </div>
 
-<section class="hero" id="heroSection">
-  <div class="hero-tag">⚡ Free Anime Browser Games</div>
-  <h1>Play <span class="orange">Anime</span><br>Games <span class="blue">Online</span></h1>
-  <div class="hero-jp">アニメゲーム · 無料 · ブラウザ · 覚醒</div>
-  <p>The best anime-style browser games in one place. No download, no registration. Just play.</p>
-  <div class="hero-pills">
-    <div class="hero-pill">🎮 <strong id="totalCount">0</strong> Games</div>
-    <div class="hero-pill">⚡ <strong>Instant</strong> Play</div>
-    <div class="hero-pill">📱 <strong>Mobile</strong> Friendly</div>
-    <div class="hero-pill">🆓 <strong>100%</strong> Free</div>
-  </div>
+<section class="hero" id="heroSection" style="display:none">
+  <h1>Free Anime Games Online</h1>
+  <p>Play instantly in your browser — no download, no sign-up. RPG, visual novels, action &amp; more.</p>
 </section>
 
-<div class="ad-slot"><span class="ad-label">Advertisement</span></div>
-
-<div class="section" id="featuredSection">
-  <div class="section-header">
-    <div class="section-title">🔥 Featured</div>
+<main>
+  <div class="stats-bar">
+    <span id="gameCount">0 games</span>
+    <span>🎮 Play free in browser</span>
   </div>
-  <div class="games-grid featured-grid" id="featuredGrid"></div>
-</div>
-
-<div class="section">
-  <div class="section-header">
-    <div class="section-title">🎮 All Games</div>
-    <div class="game-count" id="gameCount"></div>
-  </div>
-  <div class="games-grid" id="mainGrid"></div>
-</div>
-
-<div class="ad-slot" style="margin:0 auto 40px;"><span class="ad-label">Advertisement</span></div>
+  <div class="section-title" id="featuredTitle" style="display:none">⭐ Featured</div>
+  <div class="featured-grid" id="featuredGrid"></div>
+  <div class="main-grid" id="mainGrid"></div>
+</main>
 
 <footer>
-  <div class="footer-inner">
-    <div class="footer-logo">⛩ AnimeGames.Online</div>
-    <div class="footer-links">
-      <a href="blog/">Blog</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="contact.html">Contact</a>
-      <a href="submit.html">Submit a Game</a>
-    </div>
-    <div class="footer-copy">© 2026 AnimeGames.Online</div>
+  <div class="footer-links">
+    <a href="blog/index.html">📝 Blog</a>
+    <a href="submit.html">➕ Submit Game</a>
+    <a href="privacy.html">🔒 Privacy</a>
+    <a href="contact.html">✉️ Contact</a>
   </div>
-  <div class="footer-seo">
-    Play free anime games online at AnimeGames.Online. Browse anime RPG, action, fighting, visual novels, puzzle, idle and horror games.
-    All games work instantly in your browser — no download required. Popular searches: anime RPG online free, anime fighting game browser, anime visual novel free, anime idle game, best anime browser games 2026.
-  </div>
+  <p>© 2024 AnimeGames.Online — All games belong to their respective creators. Play free anime browser games.</p>
 </footer>
-
 
 <script>
 const GAMES = [
-
   {
     id: 'pokepath-td',
     name: 'PokéPath TD',
@@ -432,831 +367,454 @@ const GAMES = [
     itchId: '3991133',
     itchUrl: 'https://khydra98.itch.io/pokepath',
     author: 'Khydra98',
-    desc: 'PokéPath TD is an addictive anime-style tower defense game where you place units along a winding path to stop waves of enemies. With strategic depth and colorful visuals, each level brings new challenges. Plan your defenses wisely — every unit placement counts!',
-    howto: 'Place your defenders along the path before enemies arrive. Drag units from the panel onto the field. Upgrade them between waves to increase their power. Survive all waves to win!',
+    desc: 'PokéPath TD is an addictive anime-style tower defense game where you place units along a winding path to stop waves of enemies. Plan your defenses wisely!',
+    howto: 'Place defenders along the path. Drag units from the panel onto the field. Upgrade between waves. Survive all waves to win!',
     tags: ['tower defense', 'anime', 'strategy', 'pokemon-style'],
   },
   {
-    id: 'ninja-gauntlet',
-    name: 'Ninja Gauntlet',
-    cat: 'action',
-    icon: '🥷',
-    badge: 'top',
-    rating: 4.6,
-    featured: true,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-action',
-    author: 'Various',
-    desc: 'Ninja Gauntlet is a fast-paced anime action game where you control an elite ninja slicing through waves of enemies. Master combo attacks, dodge projectiles, and unlock powerful new abilities as you progress through increasingly difficult stages.',
-    howto: 'Use arrow keys or WASD to move. Press Z or Space to attack. Double tap direction to dash. Collect power-ups to unlock special moves. Defeat all enemies to advance to the next stage.',
-    tags: ['action', 'ninja', 'anime', 'combat', 'fast-paced'],
-  },
-  {
-    id: 'sakura-chronicles',
-    name: 'Sakura Chronicles',
+    id: 'knee-deep',
+    name: 'Knee Deep!',
     cat: 'visual-novel',
-    icon: '🌸',
-    badge: 'top',
-    rating: 4.9,
-    featured: true,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-visual-novel',
-    author: 'Various',
-    desc: 'Sakura Chronicles is a breathtaking visual novel set in feudal Japan, where cherry blossoms fall and samurai clash. Experience a rich narrative with multiple routes, loveable characters, and gorgeous anime artwork that brings the world to life.',
-    howto: 'Click or press Space to advance text. Choose dialogue options when they appear. Different choices unlock unique story routes and endings. Save often to explore all paths.',
-    tags: ['visual novel', 'romance', 'anime', 'japan', 'sakura'],
-  },
-  {
-    id: 'dragon-soul-rpg',
-    name: 'Dragon Soul RPG',
-    cat: 'rpg',
-    icon: '🐉',
-    badge: 'new',
-    rating: 4.7,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-rpg',
-    author: 'Various',
-    desc: 'Dragon Soul RPG is an epic anime role-playing game with turn-based combat and deep character progression. Build your party of unique heroes, explore vast dungeons, and challenge powerful dragon bosses. The fate of the world rests in your hands.',
-    howto: 'Navigate with arrow keys. Talk to NPCs with Space. In battle, select Attack, Magic, or Item from the menu. Level up your characters to unlock powerful new abilities and spells.',
-    tags: ['rpg', 'anime', 'dragon', 'turn-based', 'adventure'],
-  },
-  {
-    id: 'street-fighter-z',
-    name: 'Street Fighter Z',
-    cat: 'fighting',
-    icon: '⚡',
-    badge: 'hot',
-    rating: 4.8,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-fighting',
-    author: 'Various',
-    desc: 'Street Fighter Z brings intense anime fighting action to your browser. Choose from a roster of unique fighters, each with their own special moves and combos. Master the timing of your attacks to defeat opponents and climb the ranks.',
-    howto: 'Player 1: WASD to move, J/K/L to attack. Player 2: Arrow keys to move, 1/2/3 to attack. Execute special moves by combining directions with attack buttons. Block by holding back.',
-    tags: ['fighting', 'anime', 'pvp', 'combat', 'multiplayer'],
-  },
-  {
-    id: 'demon-slayer-quest',
-    name: 'Demon Slayer Quest',
-    cat: 'action',
-    icon: '🔥',
-    badge: 'top',
-    rating: 4.9,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime',
-    author: 'Various',
-    desc: 'Inspired by the beloved demon slayer anime, this action game lets you master breathing techniques to battle terrifying demons. Slash through hordes of enemies with fluid combat, unlock new breathing styles, and face powerful boss demons in epic showdowns.',
-    howto: 'Move with WASD. Click or press Z to slash. Hold attack for charged strike. Switch breathing styles with Q. Use special move with Space when your gauge is full. Dodge with Shift.',
-    tags: ['action', 'anime', 'demons', 'sword', 'breathing-styles'],
-  },
-  {
-    id: 'magical-girl-rush',
-    name: 'Magical Girl Rush',
-    cat: 'platformer',
-    icon: '✨',
-    badge: 'hot',
-    rating: 4.6,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-platformer',
-    author: 'Various',
-    desc: 'Magical Girl Rush is a charming anime platformer where you control a magical girl dashing through vibrant, colorful worlds. Collect stars, avoid obstacles, and use your magic powers to clear levels filled with cute enemies and secret paths.',
-    howto: 'Arrow keys or WASD to move. Press Space or Up to jump. Double jump to reach higher platforms. Press Z to use magic attack. Collect all stars for a perfect score on each level.',
-    tags: ['platformer', 'anime', 'magical girl', 'cute', 'adventure'],
-  },
-  {
-    id: 'idle-hero-academy',
-    name: 'Idle Hero Academy',
-    cat: 'idle',
     icon: '🏫',
     badge: 'hot',
     rating: 4.6,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-idle',
-    author: 'Various',
-    desc: 'Idle Hero Academy lets you build and manage a school for anime heroes. Train students, unlock powerful abilities, and send your heroes on missions to earn rewards — even while you are offline. The deeper you progress, the stronger your academy becomes.',
-    howto: 'Click on students to train them. Assign heroes to missions in the Quest tab. Upgrade your academy buildings to unlock new features. Check back regularly to collect offline earnings.',
-    tags: ['idle', 'clicker', 'anime', 'hero', 'management'],
+    featured: true,
+    itchId: '3367389',
+    itchUrl: 'https://comfortkuma.itch.io/knee-deep',
+    author: 'Comfort Kuma Studios',
+    desc: 'A yandere otome visual novel at Pebblestone University. Your childhood best friend, assassin roommate, and artist classmate are all willing to kill for you.',
+    howto: 'Click to advance dialogue. Choose your love interest and make decisions that shape the story.',
+    tags: ['visual novel', 'otome', 'yandere', 'romance', 'anime'],
   },
   {
-    id: 'love-in-kyoto',
-    name: 'Love in Kyoto',
+    id: 'twilight-observer',
+    name: 'Twilight Observer',
+    cat: 'visual-novel',
+    icon: '🌙',
+    badge: 'top',
+    rating: 3.4,
+    featured: false,
+    itchId: '2979122',
+    itchUrl: 'https://whitescarstudio.itch.io/to',
+    author: 'WhiteScar Studios',
+    desc: 'A murder mystery social deduction game with time travel. Trapped in a time loop with 8 strangers, find 2 killers before it\'s too late. Inspired by Danganronpa.',
+    howto: 'Click to read dialogue. Identify both killers early. Every loop is a new chance.',
+    tags: ['visual novel', 'mystery', 'horror', 'time loop', 'anime'],
+  },
+  {
+    id: 'death-loop',
+    name: 'Death Loop',
+    cat: 'visual-novel',
+    icon: '💀',
+    badge: 'hot',
+    rating: 3.9,
+    featured: false,
+    itchId: '3675174',
+    itchUrl: 'https://hopefullight.itch.io/time-traveler',
+    author: 'Hopeful Light',
+    desc: 'A Danganronpa-inspired social deduction visual novel. Trapped in a school with a killer, you must vote them out — or relive the nightmare in an endless time loop.',
+    howto: 'Click to advance dialogue. Vote to eliminate suspects. Press F for fullscreen.',
+    tags: ['visual novel', 'anime', 'horror', 'mystery', 'time-loop'],
+  },
+  {
+    id: 'summon-a-sweetheart',
+    name: 'Summon a Sweetheart',
+    cat: 'visual-novel',
+    icon: '👹',
+    badge: 'hot',
+    rating: 4.8,
+    featured: false,
+    itchId: '4438059',
+    itchUrl: 'https://inkyblinkyarts.itch.io/summon-a-sweetheart',
+    author: 'InkyBlinkyArts',
+    desc: 'A lonely girl summons an eldritch monster to be her girlfriend — but forgot to read the fine print. 10 endings, clever writing, and gorgeous pixel art.',
+    howto: 'Explore your room for gifts. Different gifts lead to different outcomes. Find the good ending!',
+    tags: ['visual novel', 'horror', 'comedy', 'romance', 'pixel art'],
+  },
+  {
+    id: 'contract-demon',
+    name: 'Contract Demon',
     cat: 'dating-sim',
-    icon: '💕',
-    badge: 'new',
-    rating: 4.7,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-dating-sim',
-    author: 'Various',
-    desc: 'Love in Kyoto is a heartwarming anime dating simulation set in the beautiful streets of modern Kyoto. Meet charming characters, go on dates, give gifts, and build relationships that blossom across multiple story routes with unique endings for each character.',
-    howto: 'Click to advance dialogue. Choose conversation options to build affinity with characters. Give gifts from your inventory to increase their love meter. Plan your schedule wisely — time is limited!',
-    tags: ['dating sim', 'romance', 'anime', 'kyoto', 'visual novel'],
-  },
-  {
-    id: 'ghost-school',
-    name: 'Ghost School',
-    cat: 'horror',
-    icon: '👻',
-    badge: null,
-    rating: 4.5,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-horror',
-    author: 'Various',
-    desc: 'Ghost School is a chilling anime horror visual novel set in an abandoned school haunted by restless spirits. Explore dark corridors, solve eerie puzzles, and uncover the tragic secrets behind the haunting. Every choice could mean the difference between escape and doom.',
-    howto: 'Click to read dialogue and advance the story. Explore rooms by clicking on highlighted objects. Combine items in your inventory to solve puzzles. Choose carefully — wrong decisions lead to bad endings.',
-    tags: ['horror', 'anime', 'ghost', 'visual novel', 'mystery'],
-  },
-  {
-    id: 'puzzle-spirits',
-    name: 'Puzzle Spirits',
-    cat: 'puzzle',
-    icon: '🔮',
-    badge: null,
-    rating: 4.4,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-puzzle',
-    author: 'Various',
-    desc: 'Puzzle Spirits is a mystical anime puzzle game where you match elemental spirits to clear the board. With over 100 hand-crafted levels and increasingly complex patterns, it offers hours of meditative but challenging gameplay wrapped in gorgeous anime visuals.',
-    howto: 'Click or tap to select a spirit. Match 3 or more of the same type to clear them. Use special spirits to trigger powerful combos. Complete the level goal before running out of moves.',
-    tags: ['puzzle', 'match-3', 'anime', 'spirits', 'casual'],
-  },
-  {
-    id: 'cyber-ninja-2077',
-    name: 'Cyber Ninja 2077',
-    cat: 'action',
-    icon: '🦾',
-    badge: 'new',
-    rating: 4.5,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime',
-    author: 'Various',
-    desc: 'Cyber Ninja 2077 blends cyberpunk aesthetics with anime action in a neon-soaked future city. Hack enemies, deflect bullets in slow motion, and slice through cyborg thugs with your katana. A stylish and adrenaline-pumping experience from start to finish.',
-    howto: 'WASD to move. Left click to slash. Right click to hack nearby enemies. Space to activate bullet-time dodge. Q to throw shuriken. Combo attacks charge your ultimate ability faster.',
-    tags: ['action', 'cyberpunk', 'anime', 'ninja', 'sci-fi'],
-  },
-  {
-    id: 'summoner-wars',
-    name: 'Summoner Wars',
-    cat: 'strategy',
-    icon: '📿',
+    icon: '😈',
     badge: 'top',
     rating: 4.7,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-strategy',
-    author: 'Various',
-    desc: 'Summoner Wars is a deep anime strategy game where you build a deck of monster cards and battle opponents in tactical grid combat. Each summon has unique abilities and elemental affinities. Master the synergies between your cards to outmaneuver your enemies.',
-    howto: 'Draw cards at the start of each turn. Drag cards onto the battlefield to summon monsters. Click a monster to see its abilities and move or attack. Destroy the enemy summoner to win.',
-    tags: ['strategy', 'card game', 'anime', 'summoner', 'tactical'],
+    featured: false,
+    itchId: '393010',
+    itchUrl: 'https://nomnomnami.itch.io/contract-demon',
+    author: 'NomnomNami',
+    desc: 'An angel summons a demon, and they end up... in love?! A charming 20-30 minute kinetic visual novel with gorgeous art and music.',
+    howto: 'Click to advance. This is a kinetic novel — enjoy the story!',
+    tags: ['visual novel', 'romance', 'anime', 'yuri', 'comedy'],
   },
   {
-    id: 'neon-dash',
-    name: 'Neon Dash',
-    cat: 'platformer',
-    icon: '🌙',
+    id: '10-minutes-dawn',
+    name: '10 Minutes Till Dawn',
+    cat: 'action',
+    icon: '🌅',
+    badge: 'top',
+    rating: 4.8,
+    featured: false,
+    itchId: '1495263',
+    itchUrl: 'https://flanne.itch.io/10-minutes-till-dawn',
+    author: 'flanne',
+    desc: 'Survive 10 minutes against endless monster waves in this fast-paced anime roguelite shooter. Choose characters and weapons, build powerful synergies.',
+    howto: 'WASD to move. Shooting is automatic. Collect XP to level up. Choose upgrades wisely. Survive until dawn!',
+    tags: ['action', 'roguelite', 'anime', 'survival', 'shooter'],
+  },
+  {
+    id: 'heartstop-tour',
+    name: 'Heartstop Tour',
+    cat: 'visual-novel',
+    icon: '🎸',
+    badge: 'hot',
+    rating: 4.8,
+    featured: true,
+    itchId: '3663792',
+    itchUrl: 'https://comfortkuma.itch.io/heartstop-tour',
+    author: 'Comfort Kuma Studios',
+    desc: 'You quit your job and accidentally become a private tour guide for a clueless tourist. Then the mascot\'s head falls off. A sweet otome romance with 6 endings.',
+    howto: 'Click to advance dialogue. Choose your path through the story.',
+    tags: ['visual novel', 'romance', 'anime', 'otome', 'comedy'],
+  },
+  {
+    id: 'cupids-kiss',
+    name: 'Cupid\'s Kiss',
+    cat: 'visual-novel',
+    icon: '💘',
+    badge: 'new',
+    rating: 4.7,
+    featured: false,
+    itchId: '2831699',
+    itchUrl: 'https://marysuegames.itch.io/cupids-kiss',
+    author: 'MarySue Games',
+    desc: 'Your Cupid has had enough of your nonsense. A hilarious short romance visual novel with voice acting, multiple endings, and gorgeous art.',
+    howto: 'Click to advance. Choose your responses wisely to get Virgil\'s attention.',
+    tags: ['visual novel', 'romance', 'comedy', 'short'],
+  },
+  {
+    id: 'mindmindmind',
+    name: 'MindMindMind',
+    cat: 'visual-novel',
+    icon: '🧠',
+    badge: 'hot',
+    rating: 4.8,
+    featured: false,
+    itchId: '2456998',
+    itchUrl: 'https://chattercap.itch.io/mindmindmind',
+    author: 'Chattercap',
+    desc: 'A man has stalked you since childhood. You call him Geist. A deeply psychological visual novel about anxiety, social fears, and finding connection. ~20k words.',
+    howto: 'Click to advance. Make choices that affect your relationship with the characters.',
+    tags: ['visual novel', 'psychological', 'romance', 'yandere', 'anime'],
+  },
+  {
+    id: 'my-husband-stranger',
+    name: 'My Husband is a Stranger',
+    cat: 'visual-novel',
+    icon: '💍',
+    badge: 'hot',
+    rating: 4.8,
+    featured: false,
+    itchId: '2896006',
+    itchUrl: 'https://chattercap.itch.io/my-husband-is-a-stranger',
+    author: 'Chattercap',
+    desc: 'Your perfect marriage is cracking. Trapped on a remote island with your devoted husband — who might not be the man you married. A haunting psychological VN.',
+    howto: 'Click to advance. Every choice shapes your relationship and leads to different endings.',
+    tags: ['visual novel', 'horror', 'romance', 'mystery', 'anime'],
+  },
+  {
+    id: 'sweetest-valentine',
+    name: 'Sweetest Valentine',
+    cat: 'visual-novel',
+    icon: '🍓',
+    badge: 'top',
+    rating: 4.7,
+    featured: false,
+    itchId: '1215191',
+    itchUrl: 'https://syllphana.itch.io/sweetest-valentine',
+    author: 'sylvan',
+    desc: 'Choose your Valentine from two very different boys — but something dark lurks beneath the surface. 9 endings, stunning artwork, and shocking twists.',
+    howto: 'Click to advance. All choices matter. Use the endings guide to find all routes.',
+    tags: ['visual novel', 'romance', 'horror', 'yandere', 'anime'],
+  },
+  {
+    id: 'honey-dress-up',
+    name: 'Honey Dress Up',
+    cat: 'casual',
+    icon: '👗',
+    badge: 'new',
+    rating: 4.7,
+    featured: false,
+    itchId: '2067826',
+    itchUrl: 'https://bun-tired.itch.io/honey-dress-up',
+    author: 'bun_tired',
+    desc: 'A cute dress-up game featuring a feminine boy with over 100 pieces of clothing. Beautiful hand-drawn art and tons of outfit combinations to discover.',
+    howto: 'Click items to try them on. Browse categories for the perfect look. Share your outfits!',
+    tags: ['casual', 'dress-up', 'cute', 'anime'],
+  },
+  {
+    id: 'witch-you-want',
+    name: 'Witch You Want',
+    cat: 'visual-novel',
+    icon: '🧙',
+    badge: 'new',
+    rating: 4.6,
+    featured: false,
+    itchId: '3004308',
+    itchUrl: 'https://vnstudioelan.itch.io/witch-you-want',
+    author: 'Studio Élan',
+    desc: 'You\'re hired as an assistant to a pompous witch running a local apothecary. Help make potions before the festival. Possibly fall in love with her. Yuri romance.',
+    howto: 'Click to advance. Try different potion recipes. Make good choices to win her heart.',
+    tags: ['visual novel', 'yuri', 'romance', 'fantasy', 'cute'],
+  },
+  {
+    id: 'under-the-thorns',
+    name: 'Under the Thorns',
+    cat: 'visual-novel',
+    icon: '🌹',
+    badge: 'top',
+    rating: 4.7,
+    featured: false,
+    itchId: '2579541',
+    itchUrl: 'https://everium.itch.io/underthethorns',
+    author: 'EVERIUM',
+    desc: 'As a maid, you discover your new workplace is haunted. Rumors say your master is a monster. 156k+ plays! Multiple endings, gorgeous art, mystery and romance.',
+    howto: 'Click to advance. Your choices lead to different endings. Aim for the True Ending.',
+    tags: ['visual novel', 'romance', 'mystery', 'otome', 'anime'],
+  },
+  {
+    id: 'abo-speed-dating',
+    name: 'A/B/O Speed Dating',
+    cat: 'visual-novel',
+    icon: '💞',
+    badge: 'hot',
+    rating: 4.7,
+    featured: false,
+    itchId: '3848055',
+    itchUrl: 'https://bigmamafatcat.itch.io/abo-speed-dating',
+    author: 'bigmamafatcat',
+    desc: 'Birth rates are declining in the Omegaverse so the government sponsors speed dating. A hilarious BL visual novel with voice acting, 12 endings, and adorable characters.',
+    howto: 'Choose your secondary gender. Impress your dates through dialogue choices. Find your match!',
+    tags: ['visual novel', 'romance', 'comedy', 'bl', 'omegaverse'],
+  },
+  {
+    id: 'penultima',
+    name: 'Penultima',
+    cat: 'visual-novel',
+    icon: '🤖',
+    badge: null,
+    rating: 4.7,
+    featured: false,
+    itchId: '2195133',
+    itchUrl: 'https://zetareishi.itch.io/penultima',
+    author: 'zetareishi',
+    desc: 'A mecha anime rivalry(?). A short but beautiful visual novel with stunning art and 2 emotionally powerful endings. Made for O2A2 Jam.',
+    howto: 'Click to advance. Choose carefully — the ending matters.',
+    tags: ['visual novel', 'mecha', 'anime', 'sci-fi', 'short'],
+  },
+  {
+    id: 'snow-white-vn',
+    name: 'Snow White Ashes',
+    cat: 'visual-novel',
+    icon: '❄️',
+    badge: 'top',
+    rating: 4.9,
+    featured: false,
+    itchId: '2438009',
+    itchUrl: 'https://endysis.itch.io/snow-white',
+    author: 'ENDYSIS',
+    desc: 'A dark fairy tale romance. One winter night you find a hunter — warm and charming. But appearances are deceiving. Stunning art, original soundtrack, 21k words.',
+    howto: 'Click to advance. Find the 3 unlockable bonus scenes. A full walkthrough is available.',
+    tags: ['visual novel', 'romance', 'dark fantasy', 'otome', 'fairy tale'],
+  },
+  {
+    id: 'evil-witch-cursed',
+    name: 'I Became an Evil Witch',
+    cat: 'visual-novel',
+    icon: '🔮',
+    badge: 'new',
+    rating: 4.9,
+    featured: false,
+    itchId: '4345859',
+    itchUrl: 'https://fluuen.itch.io/i-became-an-evil-witch-that-cursed-the-male-lead',
+    author: 'fluuen',
+    desc: 'You fell asleep playing a romance game and woke up as the evil witch who cursed the male lead. Navigate this dark fairy tale with two love interests and four endings.',
+    howto: 'Click to advance. Choose your path with Ash or Cassian. Multiple endings available.',
+    tags: ['visual novel', 'isekai', 'romance', 'otome', 'dark fantasy'],
+  },
+  {
+    id: 'gravity-failed-us',
+    name: 'Gravity Failed Us',
+    cat: 'visual-novel',
+    icon: '🌌',
+    badge: null,
+    rating: 4.4,
+    featured: false,
+    itchId: '3729247',
+    itchUrl: 'https://comfortkuma.itch.io/gravity-failed-us',
+    author: 'Comfort Kuma Studios',
+    desc: 'Stranded on a restricted alien vessel with a cold scientist who keeps calling you an anomaly. He doesn\'t rescue people. He observes them. Fully voiced short VN.',
+    howto: 'Click to advance. Make choices that affect the scientist\'s growing curiosity about you.',
+    tags: ['visual novel', 'sci-fi', 'romance', 'short', 'yaoi'],
+  },
+  {
+    id: 'silver-thread-deux',
+    name: 'Silver Thread: Deux',
+    cat: 'visual-novel',
+    icon: '🎭',
+    badge: 'top',
+    rating: 4.9,
+    featured: false,
+    itchId: '2656901',
+    itchUrl: 'https://spicaze.itch.io/silver-thread-deux',
+    author: 'Spica',
+    desc: 'An exorcist who doubts ghosts investigates a haunted theater. A charming mystery RPG with gorgeous pixel art, 2 endings, and wonderful characters.',
+    howto: 'Arrow keys to move, Z/Space to interact, X for menu. Solve the mystery to get the good ending.',
+    tags: ['visual novel', 'mystery', 'puzzle', 'pixel art', 'rpg'],
+  },
+  {
+    id: 'myosotis',
+    name: 'Myosotis',
+    cat: 'visual-novel',
+    icon: '🌸',
+    badge: 'hot',
+    rating: 4.8,
+    featured: false,
+    itchId: '3407555',
+    itchUrl: 'https://try-froggery.itch.io/myosotis',
+    author: 'Frogcake',
+    desc: 'You died at your boyfriend\'s hands. Now you haunt him seeking answers — and discover you\'re not the only ghost following him. 20k words, stunning art, unique tooltip system.',
+    howto: 'Click to advance. Use the tooltip system to analyze characters. Two endings available.',
+    tags: ['visual novel', 'mystery', 'horror', 'romance', 'anime'],
+  },
+  {
+    id: 'stranger-bus-stop',
+    name: 'The Stranger from the Bus Stop',
+    cat: 'visual-novel',
+    icon: '🚌',
+    badge: null,
+    rating: 4.3,
+    featured: false,
+    itchId: '1940223',
+    itchUrl: 'https://daijubudef.itch.io/the-stranger-from-the-bus-stop',
+    author: 'Daijubudef',
+    desc: 'You met a mysterious stranger at the bus stop. Numbers appearing on your door. Will this strange encounter turn into love? A short psychological yandere visual novel.',
+    howto: 'Click to advance. Every choice matters. Try all 4 endings.',
+    tags: ['visual novel', 'yandere', 'horror', 'romance', 'short'],
+  },
+  {
+    id: 'purarger-collector',
+    name: 'PURARGER COLLECTOR!!',
+    cat: 'casual',
+    icon: '🍔',
+    badge: 'hot',
+    rating: 4.9,
+    featured: false,
+    itchId: '3938622',
+    itchUrl: 'https://bun-tired.itch.io/purarger-collector',
+    author: 'bun_tired',
+    desc: 'A puzzle-sandbox game where you make wild burgers that may or may not conquer the world. Also, there\'s a dog. Collect trophies, find secrets, solve burger recipes.',
+    howto: 'Click to stack ingredients. Solve recipe puzzles to unlock new items. Find all secret burgers!',
+    tags: ['casual', 'puzzle', 'sandbox', 'cute', 'cooking'],
+  },
+  {
+    id: 'honey-trap-burned',
+    name: 'Honey Trap: Burned',
+    cat: 'visual-novel',
+    icon: '🔥',
     badge: 'hot',
     rating: 4.6,
-    itchId: '',
-    itchUrl: 'https://itch.io/games/tag-anime/tag-platformer',
-    author: 'Various',
-    desc: 'Neon Dash is a high-speed anime platformer set in a glowing neon world. Run, wall-jump, and dash through obstacle-filled levels at breakneck speed. The pulsing synthwave soundtrack perfectly matches the fluid, stylish movement system.',
-    howto: 'Left/Right arrows to run. Space or Up to jump. Press Space again in mid-air to double jump. Press Shift to dash through obstacles. Reach the goal portal to complete each level.',
-    tags: ['platformer', 'anime', 'neon', 'fast', 'parkour'],
+    featured: false,
+    itchId: '3322656',
+    itchUrl: 'https://helloyinny.itch.io/honey-trap-burned',
+    author: 'HelloYinny',
+    desc: 'A short night with your hitman ex-boyfriend after he gets injured saving you. Timed choices, voice acting, and a charming cocky love interest who might not stay your ex.',
+    howto: 'Click to advance. Watch the timer on timed choices. Enjoy the banter!',
+    tags: ['visual novel', 'romance', 'comedy', 'voiced', 'short'],
+  },
+  {
+    id: 'guidelicious',
+    name: 'Guidelicious',
+    cat: 'visual-novel',
+    icon: '🗺️',
+    badge: 'top',
+    rating: 4.5,
+    featured: false,
+    itchId: '2194424',
+    itchUrl: 'https://tymedust.itch.io/guidelicious',
+    author: 'Tymedust Games',
+    desc: 'A strange room. A mysterious Guide. Why are you here? A fully-voiced short visual novel with 5 endings, gorgeous art, and a deliciously cryptic love interest.',
+    howto: 'Click to advance. Replay multiple times — each playthrough reveals new dialogue. Find all 5 endings.',
+    tags: ['visual novel', 'mystery', 'romance', 'voiced', 'short'],
   },
 
   {
-  id: 'knee-deep',
-  name: 'Knee Deep!',
-  cat: 'visual-novel',
-  icon: '🏫',
-  badge: 'hot',
-  rating: 4.6,
-  featured: true,
-  itchId: '3367389',
-  itchUrl: 'https://comfortkuma.itch.io/knee-deep',
-  author: 'Comfort Kuma Studios',
-  desc: 'A yandere otome visual novel at Pebblestone University. Your childhood best friend, assassin roommate, and artist classmate are all willing to kill for you. Navigate campus life, creepy social media, and try to survive to graduation.',
-  howto: 'Click to advance dialogue. Choose your love interest and make decisions that shape the story. Multiple routes and endings.',
-  tags: ['visual novel', 'otome', 'yandere', 'romance', 'anime'],
-},
+    id: 'hauoli',
+    name: 'Hau\'oli',
+    cat: 'visual-novel',
+    icon: '🐱',
+    badge: 'new',
+    rating: 4.9,
+    featured: false,
+    itchId: '3856788',
+    itchUrl: 'https://night-fox-works.itch.io/hauoli',
+    author: 'Night Fox Works',
+    desc: 'After a fatal car crash, you wake up in the body of a cat and are found by Sialia, a Spotted Hyena. Over 5 days you learn about her life and help her through burnout and depression. SFW, heartfelt.',
+    howto: 'Click to advance. Make choices that affect Sialia\'s happiness score.',
+    tags: ['visual novel', 'slice of life', 'short', 'cute', 'kinetic novel'],
+  },
   {
-  id: 'twilight-observer',
-  name: 'Twilight Observer',
-  cat: 'visual-novel',
-  icon: '🌙',
-  badge: 'top',
-  rating: 3.4,
-  itchId: '2979122',
-  itchUrl: 'https://whitescarstudio.itch.io/to',
-  author: 'WhiteScar Studios',
-  desc: 'A murder mystery social deduction game with time travel. Trapped in a mansion time loop with 8 strangers, you must find 2 killers. Inspired by Among Us and Danganronpa with an incredible atmospheric soundtrack.',
-  howto: 'Click to read dialogue. Pay close attention to character clues. Identify both killers early — every loop is a new chance.',
-  tags: ['visual novel', 'mystery', 'horror', 'time loop', 'anime'],
-},
+    id: 'intertwine',
+    name: 'intertwine',
+    cat: 'visual-novel',
+    icon: '🔴',
+    badge: 'top',
+    rating: 4.8,
+    featured: false,
+    itchId: '2076495',
+    itchUrl: 'https://crescence-studio.itch.io/intertwine',
+    author: 'Crescence Studio',
+    desc: 'A fated love across lifetimes. Follow the red string through 4 different lives with Van — your soulmate across centuries. 25k words, voice acting, interactive reincarnation mechanic. 90k+ plays.',
+    howto: 'Click to advance. After each life, click the glowing red string to continue. Find all CGs.',
+    tags: ['visual novel', 'romance', 'anime', 'otome', 'reincarnation'],
+  },
   {
-  id: 'one-last-goodbye',
-  name: 'One Last Goodbye',
-  cat: 'visual-novel',
-  icon: '💔',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://meiri.itch.io/one-last-goodbye',
-  author: 'meiri',
-  desc: 'A deeply emotional anime visual novel about love, loss, and final farewells. Beautiful hand-drawn art and a moving story that will stay with you long after the credits roll.',
-  howto: 'Click to advance dialogue. Make meaningful choices that shape the emotional ending of this heartfelt story.',
-  tags: ['visual novel', 'anime', 'romance', 'emotional', 'drama'],
-},
+    id: 'sweet-valentine-chocolatier',
+    name: 'Sweet Valentine Chocolatier',
+    cat: 'visual-novel',
+    icon: '🍫',
+    badge: 'hot',
+    rating: 4.7,
+    featured: false,
+    itchId: '3515163',
+    itchUrl: 'https://bigmamafatcat.itch.io/sweet-valentine-chocolatier-prototype',
+    author: 'bigmamafatcat',
+    desc: 'Run your chocolate shop during Spring Festival while 3 love interests show up at your door. Customizable character, mini-games, and multiple romantic routes. From the creator of A/B/O Speed Dating.',
+    howto: 'Play through story scenes and mini-games. Make choices to build relationships with your love interests.',
+    tags: ['visual novel', 'romance', 'dating sim', 'comedy', 'cute'],
+  },
   {
-  id: 'cupids-kiss',
-  name: "Cupid's Kiss",
-  cat: 'dating-sim',
-  icon: '💘',
-  badge: 'new',
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://marysuegames.itch.io/cupids-kiss',
-  author: 'MarySue Games',
-  desc: 'A charming anime dating sim where Cupid himself meddles in your love life. Meet quirky characters, navigate romantic mishaps, and find your perfect match.',
-  howto: 'Click to advance dialogue. Choose options to increase affinity with characters and find your ideal ending.',
-  tags: ['dating sim', 'romance', 'anime', 'cute', 'comedy'],
-},
-  {
-  id: 'requiems-echo',
-  name: "Requiem's Echo",
-  cat: 'visual-novel',
-  icon: '🎻',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://khywae.itch.io/requiems-echo',
-  author: 'khywae',
-  desc: 'A haunting anime visual novel wrapped in beautiful music and melancholy atmosphere. Unravel a mysterious story about memory, music, and loss that echoes long after the final note.',
-  howto: 'Click to advance dialogue. Pay attention to musical cues and character emotions. Your choices shape the resolution.',
-  tags: ['visual novel', 'anime', 'music', 'mystery', 'atmospheric'],
-},
-  {
-  id: 'heartstop-tour',
-  name: 'Heartstop Tour',
-  cat: 'visual-novel',
-  icon: '🎸',
-  badge: 'hot',
-  rating: 4.7,
-  featured: true,
-  itchId: '',
-  itchUrl: 'https://comfortkuma.itch.io/heartstop-tour',
-  author: 'Comfort Kuma Studios',
-  desc: 'A rockstar romance visual novel. Join a band on tour and fall for one of the charismatic musicians. Stunning anime art, catchy music, and drama-filled story.',
-  howto: 'Click to advance dialogue. Choose your path through the tour and build relationships with band members.',
-  tags: ['visual novel', 'romance', 'anime', 'music', 'otome'],
-},
-  {
-  id: 'mindmindmind',
-  name: 'Mind Mind Mind',
-  cat: 'visual-novel',
-  icon: '🧠',
-  badge: null,
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://chattercap.itch.io/mindmindmind',
-  author: 'chattercap',
-  desc: 'A surreal psychological anime visual novel blurring the lines between reality and imagination. A thought-provoking journey into the inner workings of a fractured mind.',
-  howto: 'Click to advance dialogue. Explore branching paths through a surreal mindscape. Not everything is as it seems.',
-  tags: ['visual novel', 'anime', 'psychological', 'surreal', 'horror'],
-},
-  {
-  id: 'my-husband-stranger',
-  name: 'My Husband is a Stranger',
-  cat: 'visual-novel',
-  icon: '💍',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://chattercap.itch.io/my-husband-is-a-stranger',
-  author: 'chattercap',
-  desc: 'A mystery romance visual novel about waking up next to someone you do not recognize — your own husband. Unravel the truth behind your fractured memories.',
-  howto: 'Click to advance the story. Piece together clues about your past through conversations and key choices.',
-  tags: ['visual novel', 'anime', 'mystery', 'romance', 'drama'],
-},
-  {
-  id: 'summon-a-sweetheart',
-  name: 'Summon a Sweetheart',
-  cat: 'visual-novel',
-  icon: '👹',
-  badge: 'hot',
-  rating: 4.8,
-  itchId: '4438059',
-  itchUrl: 'https://inkyblinkyarts.itch.io/summon-a-sweetheart',
-  author: 'InkyBlinkyArts',
-  desc: 'A lonely girl summons an eldritch monster to be her girlfriend — but forgot to read the fine print. A darkly comedic visual novel with 10 endings, clever writing, and gorgeous pixel art.',
-  howto: 'Explore your room for gifts to give the monster. Different gifts lead to different (often terrible) outcomes. Find the good ending by giving the right gifts!',
-  tags: ['visual novel', 'horror', 'comedy', 'romance', 'pixel art'],
-},
-  {
-  id: 'contract-demon',
-  name: 'Contract Demon',
-  cat: 'dating-sim',
-  icon: '😈',
-  badge: 'top',
-  rating: 4.8,
-  itchId: '393010',
-  itchUrl: 'https://nomnomnami.itch.io/contract-demon',
-  author: 'nomnomnami',
-  desc: 'You accidentally summon a demon and now you have to live with him. A sweet and funny romance visual novel with gorgeous art and a charming cast of supernatural characters.',
-  howto: 'Click to advance dialogue. Build your relationship with the demon through daily interactions and key story choices.',
-  tags: ['dating sim', 'romance', 'anime', 'demon', 'comedy'],
-},
-  {
-  id: 'sweetest-valentine',
-  name: 'Sweetest Valentine',
-  cat: 'dating-sim',
-  icon: '🍫',
-  badge: 'new',
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://syllphana.itch.io/sweetest-valentine',
-  author: 'syllphana',
-  desc: 'A sweet Valentine-themed anime dating sim with charming characters and a heartwarming story. Perfect for fans of wholesome romance visual novels.',
-  howto: 'Click to advance dialogue. Choose your responses to build the perfect romantic relationship before Valentines Day.',
-  tags: ['dating sim', 'romance', 'anime', 'cute', 'valentines'],
-},
-  {
-  id: 'honey-dress-up',
-  name: 'Honey Dress Up',
-  cat: 'casual',
-  icon: '👗',
-  badge: 'new',
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://bun-tired.itch.io/honey-dress-up',
-  author: 'bun-tired',
-  desc: 'A cute anime dress-up game with a huge wardrobe of stylish outfits. Mix and match clothes, accessories, and hairstyles to create your perfect anime look.',
-  howto: 'Click on items to try them on. Browse categories to find the perfect outfit combination. Save your favorite looks.',
-  tags: ['casual', 'anime', 'dress-up', 'cute', 'fashion'],
-},
-  {
-  id: 'witch-you-want',
-  name: 'Witch You Want',
-  cat: 'visual-novel',
-  icon: '🧙',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://vnstudioelan.itch.io/witch-you-want',
-  author: 'VN Studio Elan',
-  desc: 'A magical anime visual novel about choosing between witches competing for your heart. Charming characters, beautiful art, and a story full of magical mishaps and romance.',
-  howto: 'Click to advance dialogue. Choose which witch to spend time with and build your relationship through magical adventures.',
-  tags: ['visual novel', 'romance', 'anime', 'fantasy', 'magic'],
-},
-  {
-  id: 'under-the-thorns',
-  name: 'Under the Thorns',
-  cat: 'visual-novel',
-  icon: '🌹',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://everium.itch.io/underthethorns',
-  author: 'everium',
-  desc: 'A dark romantic anime visual novel where beauty hides danger. Navigate a world of thorns and secrets, where every choice can lead to blossoming love or a thorny end.',
-  howto: 'Click to advance dialogue. Choose your path carefully through this atmospheric dark romance with multiple endings.',
-  tags: ['visual novel', 'romance', 'dark', 'anime', 'fantasy'],
-},
-  {
-  id: 'purarger-collector',
-  name: 'Purarger Collector',
-  cat: 'casual',
-  icon: '🎴',
-  badge: 'new',
-  rating: 4.2,
-  itchId: '',
-  itchUrl: 'https://bun-tired.itch.io/purarger-collector',
-  author: 'bun-tired',
-  desc: 'A relaxing anime card collecting game with adorable character art. Collect, trade, and build your perfect card collection in this charming casual experience.',
-  howto: 'Click to collect cards. Complete sets to unlock new characters and rare cards. Build your ultimate collection.',
-  tags: ['casual', 'anime', 'card game', 'collecting', 'cute'],
-},
-  {
-  id: 'honey-trap-burned',
-  name: 'Honey Trap Burned',
-  cat: 'visual-novel',
-  icon: '🍯',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://helloyinny.itch.io/honey-trap-burned',
-  author: 'helloyinny',
-  desc: 'An anime mystery visual novel with a twist of espionage and betrayal. You are a spy who falls too deep into the honey trap. Unravel the conspiracy before it consumes you.',
-  howto: 'Click to advance the story. Gather clues and make careful decisions. Trust no one in this web of deception.',
-  tags: ['visual novel', 'anime', 'mystery', 'romance', 'spy'],
-},
-  {
-  id: 'guidelicious',
-  name: 'Guidelicious',
-  cat: 'casual',
-  icon: '🍰',
-  badge: 'new',
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://tymedust.itch.io/guidelicious',
-  author: 'tymedust',
-  desc: 'A delightful anime cooking guide game where you follow adorable characters through recipes and culinary adventures. Cute art and relaxing gameplay make it perfect for casual sessions.',
-  howto: 'Follow the on-screen guides to complete each cooking step. Click at the right time for perfect results.',
-  tags: ['casual', 'anime', 'cooking', 'cute', 'relaxing'],
-},
-  {
-  id: 'abo-speed-dating',
-  name: 'ABO Speed Dating',
-  cat: 'dating-sim',
-  icon: '💞',
-  badge: 'hot',
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://bigmamafatcat.itch.io/abo-speed-dating',
-  author: 'bigmamafatcat',
-  desc: 'A hilarious anime speed dating sim with a supernatural twist. Meet a parade of quirky romantic candidates in rapid-fire dates full of comedy, surprises, and unexpected connections.',
-  howto: 'Click through rapid dialogue exchanges. Choose your best responses to impress each date. Find your perfect match before time runs out!',
-  tags: ['dating sim', 'romance', 'anime', 'comedy', 'supernatural'],
-},
-  {
-  id: 'penultima',
-  name: 'Penultima',
-  cat: 'visual-novel',
-  icon: '⚗️',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://zetareishi.itch.io/penultima',
-  author: 'zetareishi',
-  desc: 'A dark fantasy anime visual novel with alchemist protagonists and a world on the brink of ruin. Deep lore, morally complex characters, and multiple branching paths make this a standout indie VN.',
-  howto: 'Click to advance dialogue. Make alchemical decisions that affect the world and your relationships. Multiple endings based on your choices.',
-  tags: ['visual novel', 'fantasy', 'anime', 'dark', 'alchemy'],
-},
-  {
-  id: 'snow-white-vn',
-  name: 'Snow White',
-  cat: 'visual-novel',
-  icon: '🍎',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://endysis.itch.io/snow-white',
-  author: 'endysis',
-  desc: 'A stunning anime retelling of Snow White with a dark twist. Gorgeous art, complex characters, and a story that subverts the classic fairy tale in unexpected and compelling ways.',
-  howto: 'Click to advance dialogue. Explore the reimagined fairy tale world and make choices that lead to different story outcomes.',
-  tags: ['visual novel', 'anime', 'fairy tale', 'dark', 'romance'],
-},
-  {
-  id: 'evil-witch-cursed',
-  name: 'I Became an Evil Witch',
-  cat: 'visual-novel',
-  icon: '🔮',
-  badge: 'new',
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://fluuen.itch.io/i-became-an-evil-witch-that-cursed-the-male-lead',
-  author: 'fluuen',
-  desc: 'An isekai anime visual novel where you wake up as the villain witch who cursed the male lead. Navigate a world where you must either embrace your role as the antagonist or rewrite your destiny.',
-  howto: 'Click to advance dialogue. Choose how to play your role as the evil witch — go full villain or try to change the story.',
-  tags: ['visual novel', 'anime', 'isekai', 'fantasy', 'romance'],
-},
-  {
-  id: 'gravity-failed-us',
-  name: 'Gravity Failed Us',
-  cat: 'visual-novel',
-  icon: '🌌',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://comfortkuma.itch.io/gravity-failed-us',
-  author: 'Comfort Kuma Studios',
-  desc: 'A sci-fi anime visual novel set among the stars. When gravity fails, the bonds between characters are tested to their limit. A poignant story of connection and survival in the cosmos.',
-  howto: 'Click to advance dialogue. Navigate complex relationships and survival decisions aboard a failing space station.',
-  tags: ['visual novel', 'anime', 'sci-fi', 'romance', 'drama'],
-},
-  {
-  id: 'going-live',
-  name: 'Going Live',
-  cat: 'visual-novel',
-  icon: '🎥',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://jennyvipham.itch.io/going-live',
-  author: 'jennyvipham',
-  desc: 'An anime visual novel about becoming a content creator and the relationships you build along the way. Charming characters, relatable humor, and a story about chasing your dreams online.',
-  howto: 'Click to advance dialogue. Manage your streaming career and build relationships with your community and fellow creators.',
-  tags: ['visual novel', 'anime', 'slice of life', 'romance', 'comedy'],
-},
-  {
-  id: 'silver-thread-deux',
-  name: 'Silver Thread Deux',
-  cat: 'visual-novel',
-  icon: '🪡',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://spicaze.itch.io/silver-thread-deux',
-  author: 'spicaze',
-  desc: 'The sequel to Silver Thread — a romantic anime visual novel about fate, red strings, and the threads that bind people together across time. Beautiful artwork and a deeply moving story.',
-  howto: 'Click to advance dialogue. Follow the threads of fate and make choices that weave your story toward love or loss.',
-  tags: ['visual novel', 'romance', 'anime', 'fate', 'drama'],
-},
-  {
-  id: 'myosotis',
-  name: 'Myosotis',
-  cat: 'visual-novel',
-  icon: '🌿',
-  badge: null,
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://try-froggery.itch.io/myosotis',
-  author: 'try-froggery',
-  desc: 'Myosotis — the forget-me-not flower — is at the heart of this delicate anime visual novel about memory and connection. A quiet, beautiful story with stunning art and an emotional depth.',
-  howto: 'Click to advance dialogue. Tend to your relationships carefully — what you remember, and what you forget, shapes the ending.',
-  tags: ['visual novel', 'anime', 'romance', 'emotional', 'slice of life'],
-},
-  {
-  id: 'stranger-bus-stop',
-  name: 'The Stranger from the Bus Stop',
-  cat: 'visual-novel',
-  icon: '🚌',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://daijubudef.itch.io/the-stranger-from-the-bus-stop',
-  author: 'daijubudef',
-  desc: 'Every morning, the same mysterious stranger at the bus stop. A slice-of-life anime visual novel about small moments, unexpected connections, and what it means to truly see someone.',
-  howto: 'Click to advance the story. Notice the small details in each encounter — they all add up to something beautiful.',
-  tags: ['visual novel', 'anime', 'slice of life', 'romance', 'mystery'],
-},
-  {
-  id: 'scratching-an-itch',
-  name: 'Scratching an Itch',
-  cat: 'visual-novel',
-  icon: '🖊️',
-  badge: null,
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://artyfartygames.itch.io/scratching-an-itch',
-  author: 'ArtyFartyGames',
-  desc: 'A meta anime visual novel about making visual novels. Funny, self-aware, and surprisingly heartfelt — a love letter to indie game development and the itch.io community.',
-  howto: 'Click to advance dialogue. Enjoy the meta humor and make choices that shape this story about stories.',
-  tags: ['visual novel', 'anime', 'comedy', 'meta', 'indie'],
-},
-  {
-  id: 'stay-with-me',
-  name: 'Stay With Me',
-  cat: 'visual-novel',
-  icon: '🌙',
-  badge: null,
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://khywae.itch.io/stay-with-me',
-  author: 'khywae',
-  desc: 'A tender anime visual novel about two people sharing one quiet night together. Sometimes the most profound connections happen in the shortest moments. Atmospheric and beautifully written.',
-  howto: 'Click to advance dialogue. Savor each moment of this short but deeply affecting story about human connection.',
-  tags: ['visual novel', 'anime', 'romance', 'slice of life', 'emotional'],
-},
-  {
-  id: 'toe-20-toe',
-  name: 'Toe 2.0 Toe',
-  cat: 'casual',
-  icon: '👟',
-  badge: 'new',
-  rating: 4.2,
-  itchId: '',
-  itchUrl: 'https://plazatin.itch.io/toe-20-toe',
-  author: 'plazatin',
-  desc: 'A quirky anime casual game with unexpected humor and charming art. A fun short experience that will leave you smiling with its unique premise and lighthearted gameplay.',
-  howto: 'Follow the on-screen prompts. The gameplay is simple and intuitive — just enjoy the ride!',
-  tags: ['casual', 'anime', 'comedy', 'cute', 'short'],
-},
-  {
-  id: 'hauoli',
-  name: 'Hauoli',
-  cat: 'visual-novel',
-  icon: '🌺',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://night-fox-works.itch.io/hauoli',
-  author: 'Night Fox Works',
-  desc: 'A tropical anime visual novel full of warmth, joy, and island spirit. Hauoli means happiness in Hawaiian — and this game delivers exactly that with beautiful art and a feel-good story.',
-  howto: 'Click to advance dialogue. Enjoy the sunny atmosphere and make choices that lead to heartwarming outcomes.',
-  tags: ['visual novel', 'anime', 'romance', 'tropical', 'wholesome'],
-},
-  {
-  id: 'sweet-valentine-chocolatier',
-  name: 'Sweet Valentine Chocolatier',
-  cat: 'dating-sim',
-  icon: '🍫',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://bigmamafatcat.itch.io/sweet-valentine-chocolatier',
-  author: 'bigmamafatcat',
-  desc: 'Run your own anime chocolate shop on Valentine\'s Day and win the hearts of your customers. A sweet blend of shop management and romance sim with adorable characters.',
-  howto: 'Click to serve customers and craft chocolates. Build relationships with regulars to unlock special romance routes.',
-  tags: ['dating sim', 'romance', 'anime', 'cute', 'valentines'],
-},
-  {
-  id: 'i-hate-my-waifu',
-  name: 'I Hate My Waifu Streamer',
-  cat: 'visual-novel',
-  icon: '📱',
-  badge: 'hot',
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://nozorigames.itch.io/i-hate-my-waifu-streamer',
-  author: 'nozorigames',
-  desc: 'A hilarious anime visual novel about hating — then falling for — a popular VTuber. Full of internet culture humor, otaku references, and an unexpectedly sweet romance.',
-  howto: 'Click to advance dialogue. Navigate your complicated feelings about the streamer through daily interactions and key choices.',
-  tags: ['visual novel', 'romance', 'anime', 'comedy', 'vtuber'],
-},
-  {
-  id: 'intertwine',
-  name: 'Intertwine',
-  cat: 'visual-novel',
-  icon: '🧶',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://crescence-studio.itch.io/intertwine',
-  author: 'Crescence Studio',
-  desc: 'An anime visual novel about the invisible threads connecting strangers in a city. Multiple perspectives intertwine in unexpected ways, revealing a tapestry of love, loss, and coincidence.',
-  howto: 'Click to advance dialogue. Follow each character\'s perspective — the connections between them reveal themselves gradually.',
-  tags: ['visual novel', 'anime', 'drama', 'romance', 'slice of life'],
-},
-  {
-  id: 'mirrors-curse',
-  name: "A Mirror's Curse",
-  cat: 'visual-novel',
-  icon: '🪞',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://amaty.itch.io/a-mirrors-curse-sfw',
-  author: 'amaty',
-  desc: 'Trapped in a cursed mirror, you must navigate a dark fantasy world to find your way back. An atmospheric anime visual novel with stunning gothic art and a gripping supernatural story.',
-  howto: 'Click to advance dialogue. Solve the mirror\'s riddles and make choices that break or deepen the curse.',
-  tags: ['visual novel', 'fantasy', 'anime', 'dark', 'supernatural'],
-},
-  {
-  id: 'demon-lord-o2a2',
-  name: 'Demon Lord O2A2',
-  cat: 'visual-novel',
-  icon: '👑',
-  badge: 'new',
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://ant-san.itch.io/demon-lord-o2a2',
-  author: 'ant-san',
-  desc: 'A short but charming anime visual novel about a surprisingly relatable Demon Lord. What happens when the great villain just wants to be understood? A funny and heartfelt mini-story.',
-  howto: 'Click to advance dialogue. Enjoy this short comedic story about the misunderstood demon king.',
-  tags: ['visual novel', 'anime', 'fantasy', 'comedy', 'short'],
-},
-  {
-  id: 'dermimis',
-  name: 'Dermimis',
-  cat: 'visual-novel',
-  icon: '🌑',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://cinnamew.itch.io/dermimis',
-  author: 'cinnamew',
-  desc: 'A darkly beautiful anime visual novel exploring themes of identity and duality. Haunting atmosphere, gorgeous art, and a story that peels back layers to reveal something deeply unsettling.',
-  howto: 'Click to advance dialogue. Explore the duality of the protagonist through careful choices that reveal hidden truths.',
-  tags: ['visual novel', 'anime', 'horror', 'dark', 'psychological'],
-},
-  {
-  id: 'not-a-creep',
-  name: "I'm Not a Creep, I Promise",
-  cat: 'visual-novel',
-  icon: '😅',
-  badge: 'new',
-  rating: 4.3,
-  itchId: '',
-  itchUrl: 'https://bun-tired.itch.io/im-not-a-creep-i-promise',
-  author: 'bun-tired',
-  desc: 'A hilariously awkward anime visual novel about accidentally coming across as extremely suspicious to everyone you meet. Pure comedy gold with relatable social anxiety humor.',
-  howto: 'Click to advance dialogue. Try (and probably fail) to convince everyone you are perfectly normal and not suspicious at all.',
-  tags: ['visual novel', 'anime', 'comedy', 'slice of life', 'short'],
-},
-  {
-  id: 'turned-into-girl',
-  name: 'I Got Turned Into a Girl',
-  cat: 'visual-novel',
-  icon: '🎀',
-  badge: 'hot',
-  rating: 4.6,
-  itchId: '',
-  itchUrl: 'https://spiderzone.itch.io/i-got-turned-into-a-girl',
-  author: 'spiderzone',
-  desc: 'A gender-bending anime comedy visual novel with charm and heart. After a magical mishap, the protagonist must navigate daily life in a completely new way — and maybe find love along the way.',
-  howto: 'Click to advance dialogue. Make choices that shape how you adapt to your new situation and the relationships you build.',
-  tags: ['visual novel', 'anime', 'comedy', 'romance', 'gender-bender'],
-},
-  {
-  id: 'heartburn-vn',
-  name: 'Heartburn',
-  cat: 'visual-novel',
-  icon: '🔥',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://kathinkapng.itch.io/heartburn',
-  author: 'kathinkapng',
-  desc: 'A spicy anime romance visual novel about the burning feeling of falling for someone you absolutely should not. Gorgeous art and a story that makes your heart race from start to finish.',
-  howto: 'Click to advance dialogue. Navigate the forbidden romance and make choices that fan the flames or let them die out.',
-  tags: ['visual novel', 'romance', 'anime', 'drama', 'emotional'],
-},
-  {
-  id: '10-minutes-dawn',
-  name: '10 Minutes Till Dawn',
-  cat: 'action',
-  icon: '🌅',
-  badge: 'top',
-  rating: 4.8,
-  itchId: '1495263',
-  itchUrl: 'https://flanne.itch.io/10-minutes-till-dawn',
-  author: 'flanne',
-  desc: 'Survive 10 minutes against endless waves of monsters in this fast-paced anime roguelite shooter. Choose from multiple characters and weapons, build powerful synergies, and make it to dawn.',
-  howto: 'WASD to move. Shooting is automatic. Collect XP to level up. Choose upgrades wisely to build a powerful combination. Survive until dawn!',
-  tags: ['action', 'roguelite', 'anime', 'survival', 'shooter'],
-},
-  {
-  id: 'whale-island',
-  name: 'The Whale Island',
-  cat: 'visual-novel',
-  icon: '🐋',
-  badge: null,
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://everium.itch.io/thewhaleisland',
-  author: 'everium',
-  desc: 'An enchanting anime visual novel set on a mysterious island that drifts through the sky on the back of a giant whale. A magical adventure full of wonder, discovery, and unexpected friendships.',
-  howto: 'Click to advance dialogue. Explore the whale island and uncover its ancient secrets through curiosity and kindness.',
-  tags: ['visual novel', 'anime', 'fantasy', 'adventure', 'wholesome'],
-},
-  {
-  id: 'lovebyte-demo',
-  name: 'LoveByte',
-  cat: 'dating-sim',
-  icon: '💾',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://nochistudios.itch.io/lovebyte-demo',
-  author: 'Nochi Studios',
-  desc: 'A cyberpunk anime dating sim where you fall in love with AI companions. Navigate a neon-lit future city and form deep connections with digital beings who feel very, very real.',
-  howto: 'Click to advance dialogue. Build your relationship with AI companions through daily interactions and key story decisions.',
-  tags: ['dating sim', 'anime', 'cyberpunk', 'sci-fi', 'romance'],
-},
-  {
-  id: 'babysitting-is-murder',
-  name: 'Babysitting is Murder',
-  cat: 'visual-novel',
-  icon: '🔪',
-  badge: 'hot',
-  rating: 4.7,
-  itchId: '',
-  itchUrl: 'https://flamingteddy.itch.io/babysitting-is-murder',
-  author: 'FlamingTeddy',
-  desc: 'A darkly comedic anime visual novel where a routine babysitting job goes horrifyingly wrong. Part horror, part comedy — a wild ride full of twists that keeps you guessing until the very end.',
-  howto: 'Click to advance dialogue. Make survival decisions carefully — some choices have deadly consequences in this comedic horror story.',
-  tags: ['visual novel', 'horror', 'comedy', 'anime', 'mystery'],
-},
-  {
-  id: 'happiness-inc',
-  name: 'Happiness Inc.',
-  cat: 'visual-novel',
-  icon: '😊',
-  badge: null,
-  rating: 4.4,
-  itchId: '',
-  itchUrl: 'https://izumi-games.itch.io/happiness-inc',
-  author: 'izumi-games',
-  desc: 'You work at a company that sells happiness. But what is happiness really? A thought-provoking anime visual novel that blends corporate satire with emotional depth and existential questions.',
-  howto: 'Click to advance dialogue. Navigate your unusual job and make choices that question what it means to be truly happy.',
-  tags: ['visual novel', 'anime', 'slice of life', 'drama', 'philosophical'],
-},
-  {
-  id: 'hook-line-love',
-  name: 'Hook, Line, and Love',
-  cat: 'dating-sim',
-  icon: '🎣',
-  badge: 'new',
-  rating: 4.5,
-  itchId: '',
-  itchUrl: 'https://mythikiwi.itch.io/hook-line-and-love',
-  author: 'mythikiwi',
-  desc: 'A wholesome anime fishing dating sim where you catch feelings alongside fish. Meet charming characters at the lake, improve your fishing skills, and reel in the romance of your dreams.',
-  howto: 'Click to cast your line. Build relationships with the characters you meet at the fishing spot. Balance fishing and romance!',
-  tags: ['dating sim', 'romance', 'anime', 'casual', 'wholesome'],
-},
+    id: 'lovebyte-demo',
+    name: 'lovebyte.exe',
+    cat: 'dating-sim',
+    icon: '💬',
+    badge: 'new',
+    rating: 4.6,
+    featured: false,
+    itchId: '3891461',
+    itchUrl: 'https://nochistudios.itch.io/lovebyte-demo',
+    author: 'Nochi Studios',
+    desc: 'Your kamioshi\'s stream ends abruptly. You join a fan group chat — and start noticing strange coincidences. Is your VTuber idol hiding in the chat? A Mystic Messenger-inspired dating chatsim.',
+    howto: 'Navigate through chat messages and make choices that affect your relationships. Unlock CGs and stream content.',
+    tags: ['dating sim', 'vtuber', 'romance', 'chat', 'anime'],
+  },
+
 ];
 
-</script>
-<script>
+const CAT_LABELS = {
+  'action':'Action', 'visual-novel':'Visual Novel', 'dating-sim':'Dating Sim',
+  'strategy':'Strategy', 'casual':'Casual', 'puzzle':'Puzzle'
+};
+
 let currentCat = 'all';
 
 function setCat(cat, btn) {
@@ -1266,42 +824,49 @@ function setCat(cat, btn) {
   renderAll();
 }
 
+function starRating(r) {
+  const full = Math.floor(r);
+  const half = r - full >= 0.5 ? 1 : 0;
+  return '★'.repeat(full) + (half ? '½' : '') + ' ' + r.toFixed(1);
+}
+
 function cardHTML(g, delay = 0) {
-  const badge = g.badge ? `<div class="game-badge badge-${g.badge}">${g.badge.toUpperCase()}</div>` : '';
+  const badge = g.badge ? `<div class="badge badge-${g.badge}">${g.badge}</div>` : '';
+  const featuredClass = g.featured ? ' featured-thumb' : '';
   return `
-    <a class="game-card" href="game.html?id=${g.id}" style="animation-delay:${delay}s">
-      <div class="game-thumb ${g.cat}">
-        <div class="thumb-icon">${g.icon}</div>
-        <div class="thumb-overlay"><div class="play-btn-overlay">▶ PLAY</div></div>
-        ${badge}
-      </div>
-      <div class="game-info">
-        <div class="game-name">${g.name}</div>
-        <div class="game-meta">
-          <span class="game-genre">${g.cat}</span>
-          <span class="game-rating">★ ${g.rating}</span>
+    <div class="game-card" style="animation-delay:${delay}s" onclick="location.href='game.html?id=${g.id}'">
+      <div class="card-thumb${featuredClass}">${g.icon}${badge}</div>
+      <div class="card-body">
+        <div class="card-name">${g.name}</div>
+        <div class="card-cat">${CAT_LABELS[g.cat] || g.cat}</div>
+        <div class="card-desc">${g.desc}</div>
+        <div class="card-footer">
+          <span class="rating">${starRating(g.rating)}</span>
+          <button class="play-btn" onclick="event.stopPropagation();location.href='game.html?id=${g.id}'">▶ Play</button>
         </div>
       </div>
-    </a>`;
+    </div>`;
 }
 
 function renderAll() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  let filtered = GAMES.filter(g => {
-    const matchCat = currentCat === 'all' || g.cat === currentCat;
-    const matchQ = !q || g.name.toLowerCase().includes(q) || g.tags?.some(t => t.includes(q));
-    return matchCat && matchQ;
-  });
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let filtered = GAMES;
+  if (currentCat !== 'all') filtered = filtered.filter(g => g.cat === currentCat);
+  if (q) filtered = filtered.filter(g =>
+    g.name.toLowerCase().includes(q) ||
+    g.desc.toLowerCase().includes(q) ||
+    g.tags.some(t => t.includes(q))
+  );
 
-  const noFilter = currentCat === 'all' && !q;
-  document.getElementById('heroSection').style.display = noFilter ? '' : 'none';
-  document.getElementById('featuredSection').style.display = noFilter ? '' : 'none';
-  document.getElementById('totalCount').textContent = GAMES.length;
+  const noFilter = !q && currentCat === 'all';
+  document.getElementById('featuredTitle').style.display = noFilter ? 'block' : 'none';
 
   if (noFilter) {
     const featured = filtered.filter(g => g.featured);
     document.getElementById('featuredGrid').innerHTML = featured.map((g,i) => cardHTML(g, i*0.05)).join('');
     filtered = filtered.filter(g => !g.featured);
+  } else {
+    document.getElementById('featuredGrid').innerHTML = '';
   }
 
   document.getElementById('mainGrid').innerHTML = filtered.map((g,i) => cardHTML(g, i*0.03)).join('');
