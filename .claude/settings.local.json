@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:comfortkuma.itch.io)",
+      "WebFetch(domain:hopefullight.itch.io)",
+      "WebFetch(domain:bigmamafatcat.itch.io)",
+      "WebFetch(domain:zetareishi.itch.io)",
+      "WebFetch(domain:endysis.itch.io)",
+      "WebFetch(domain:fluuen.itch.io)",
+      "WebFetch(domain:jennyvipham.itch.io)",
+      "WebFetch(domain:spicaze.itch.io)",
+      "WebFetch(domain:try-froggery.itch.io)",
+      "WebFetch(domain:daijubudef.itch.io)",
+      "WebFetch(domain:artyfartygames.itch.io)",
+      "WebFetch(domain:khywae.itch.io)",
+      "WebFetch(domain:plazatin.itch.io)",
+      "WebFetch(domain:night-fox-works.itch.io)",
+      "WebFetch(domain:nozorigames.itch.io)",
+      "WebFetch(domain:crescence-studio.itch.io)",
+      "WebFetch(domain:amaty.itch.io)",
+      "WebFetch(domain:ant-san.itch.io)",
+      "WebFetch(domain:cinnamew.itch.io)",
+      "WebFetch(domain:bun-tired.itch.io)",
+      "WebFetch(domain:spiderzone.itch.io)",
+      "WebFetch(domain:kathinkapng.itch.io)",
+      "WebFetch(domain:flanne.itch.io)",
+      "WebFetch(domain:everium.itch.io)",
+      "WebFetch(domain:nochistudios.itch.io)",
+      "WebFetch(domain:flamingteddy.itch.io)",
+      "WebFetch(domain:izumi-games.itch.io)",
+      "WebFetch(domain:mythikiwi.itch.io)"
+    ]
+  }
+}
