@@ -1,263 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2STTK5MDS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-J2STTK5MDS');
-</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loading... — AnimeGames.Online</title>
-<meta name="description" content="Play free anime games online.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #08080f; --surface: #0f0f1a; --surface2: #151525;
-  --border: #1e1e32; --accent: #e91e8c; --accent2: #00d4ff;
-  --accent3: #ffd700; --text: #f0f0ff; --muted: #6060a0; --sakura: #ffb7c5;
-}
-html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; }
-body::before {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 15% 15%, rgba(233,30,140,0.07) 0%, transparent 45%),
-              radial-gradient(ellipse at 85% 85%, rgba(0,212,255,0.05) 0%, transparent 45%);
-}
-
-header {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(8,8,15,0.95); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(233,30,140,0.2);
-  padding: 0 40px; height: 64px;
-  display: flex; align-items: center; gap: 20px;
-}
-.back-btn {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--muted); text-decoration: none;
-  transition: color 0.2s;
-}
-.back-btn:hover { color: var(--accent); }
-.back-btn::before { content: '←'; }
-
-.logo {
-  font-family: 'Zen Dots', cursive; font-size: 18px; color: var(--text);
-  text-decoration: none; display: flex; align-items: center; gap: 8px;
-}
-.logo span { color: var(--accent); }
-.logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-
-.breadcrumb { font-size: 12px; color: var(--muted); margin-left: 8px; }
-.breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
-.breadcrumb a:hover { color: var(--accent2); }
-
-main {
-  position: relative; z-index: 10;
-  max-width: 1100px; margin: 0 auto;
-  padding: 32px 24px 60px;
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 28px;
-  align-items: start;
-}
-
-/* LEFT COLUMN */
-.game-main {}
-
-/* AD TOP */
-.ad-slot {
-  height: 90px; border: 1px dashed rgba(233,30,140,0.1);
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; margin-bottom: 20px;
-}
-.ad-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(96,96,160,0.3); }
-
-.game-header { margin-bottom: 20px; }
-.game-icon-title { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
-.game-big-icon { font-size: 52px; }
-.game-title { font-family: 'Zen Dots', cursive; font-size: 28px; line-height: 1.1; }
-.game-title-sub { font-size: 13px; color: var(--muted); margin-top: 4px; display: flex; align-items: center; gap: 12px; }
-.game-rating { color: var(--accent3); }
-.game-author { color: var(--muted); }
-.game-cat-badge {
-  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 12px;
-  background: rgba(233,30,140,0.15); border: 1px solid rgba(233,30,140,0.3); color: var(--accent);
-}
-
-/* PLAY AREA */
-.play-area {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.play-area-top {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.play-area-title { font-family: 'Zen Dots', cursive; font-size: 14px; color: var(--muted); }
-
-.play-btn-main {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: linear-gradient(135deg, var(--accent), #c2185b);
-  color: white; text-decoration: none;
-  font-family: 'Zen Dots', cursive; font-size: 15px;
-  padding: 14px 32px; border-radius: 8px;
-  transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 4px 20px rgba(233,30,140,0.3);
-  border: none; cursor: pointer; width: 100%;
-  justify-content: center;
-}
-.play-btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
-
-.play-content { padding: 24px; }
-
-.itch-embed { margin-bottom: 20px; }
-.itch-embed iframe { width: 100%; border-radius: 8px; display: block; }
-
-/* AD MID */
-.ad-mid {
-  height: 90px; border: 1px dashed rgba(233,30,140,0.1);
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; margin-bottom: 20px;
-}
-
-/* DESCRIPTION */
-.game-desc-section { margin-bottom: 24px; }
-.section-title {
-  font-family: 'Zen Dots', cursive; font-size: 14px; color: var(--text);
-  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
-}
-.section-title::before { content: ''; width: 3px; height: 16px; background: linear-gradient(to bottom, var(--accent), var(--accent2)); border-radius: 2px; }
-
-.game-desc {
-  font-size: 14px; color: var(--muted); line-height: 1.8; font-weight: 300;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 20px;
-}
-
-.howto {
-  font-size: 14px; color: var(--muted); line-height: 1.8; font-weight: 300;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 16px 20px;
-}
-
-.tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.tag {
-  font-size: 11px; color: var(--muted);
-  background: var(--surface2); border: 1px solid var(--border);
-  padding: 4px 12px; border-radius: 12px;
-  transition: all 0.2s; cursor: default;
-}
-.tag:hover { border-color: var(--accent2); color: var(--accent2); }
-
-/* RIGHT COLUMN — SIDEBAR */
-.sidebar {}
-
-.ad-sidebar {
-  width: 100%; height: 250px;
-  border: 1px dashed rgba(233,30,140,0.1);
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; margin-bottom: 20px;
-}
-
-.related-section {}
-.related-title { font-family: 'Zen Dots', cursive; font-size: 13px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.related-title::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
-
-.related-card {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; margin-bottom: 8px; text-decoration: none;
-  transition: border-color 0.2s, transform 0.2s;
-  cursor: pointer;
-}
-.related-card:hover { border-color: rgba(233,30,140,0.3); transform: translateX(4px); }
-.related-icon { font-size: 28px; flex-shrink: 0; }
-.related-info {}
-.related-name { font-family: 'Zen Dots', cursive; font-size: 12px; color: var(--text); margin-bottom: 3px; }
-.related-meta { font-size: 11px; color: var(--muted); }
-
-.ad-sidebar2 {
-  width: 100%; height: 250px;
-  border: 1px dashed rgba(233,30,140,0.1);
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px; margin-top: 20px;
-}
-
-/* FOOTER */
-footer {
-  position: relative; z-index: 10;
-  border-top: 1px solid var(--border);
-  padding: 24px 40px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.footer-logo { font-family: 'Zen Dots', cursive; font-size: 16px; color: var(--accent); }
-.footer-copy { font-size: 11px; color: rgba(96,96,160,0.4); }
-
-/* NOT FOUND */
-.not-found {
-  text-align: center; padding: 80px 24px;
-  grid-column: 1 / -1;
-}
-.not-found h2 { font-family: 'Zen Dots', cursive; font-size: 32px; color: var(--muted); margin-bottom: 12px; }
-.not-found p { color: var(--muted); margin-bottom: 24px; }
-.not-found a { color: var(--accent); text-decoration: none; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 768px) {
-  header { padding: 0 16px; }
-  main { grid-template-columns: 1fr; padding: 20px 16px 40px; }
-  .sidebar { order: -1; }
-  .ad-sidebar, .ad-sidebar2 { height: 90px; }
-  footer { padding: 20px 16px; flex-direction: column; gap: 8px; text-align: center; }
-}
-</style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821700334977821" crossorigin="anonymous"></script>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2216%22 fill=%22%23ff6b00%22/><text y=%22.85em%22 font-size=%2278%22 x=%2250%25%22 text-anchor=%22middle%22>⛩</text></svg>">
-</head>
-<body>
-
-<header>
-  <a class="back-btn" href="index.html">Back</a>
-  <a class="logo" href="index.html">
-    <div class="logo-icon">⛩</div>
-    Anime<span>Games</span>.Online
-  </a>
-  <div class="breadcrumb">
-    <a href="index.html">Home</a> › <span id="breadcrumbGame">Game</span>
-  </div>
-</header>
-
-<main id="mainContent">
-  <div class="not-found" id="notFound" style="display:none">
-    <h2>Game not found 🥷</h2>
-    <p>This game doesn't exist or may have been removed.</p>
-    <a href="index.html">← Back to all games</a>
-  </div>
-</main>
-
-<footer>
-  <div class="footer-logo">⛩ AnimeGames.Online</div>
-  <div class="footer-copy">© 2025 AnimeGames.Online · Free Anime Browser Games</div>
-</footer>
-
-
-<script>
 const GAMES = [
+
   {
     id: 'pokepath-td',
     name: 'PokéPath TD',
@@ -472,10 +214,8 @@ const GAMES = [
     howto: 'Left/Right arrows to run. Space or Up to jump. Press Space again in mid-air to double jump. Press Shift to dash through obstacles. Reach the goal portal to complete each level.',
     tags: ['platformer', 'anime', 'neon', 'fast', 'parkour'],
   },
-// PASTE THESE INTO YOUR GAMES ARRAY IN index.html AND game.html
-// Add after the last existing game entry
 
-{
+  {
   id: 'knee-deep',
   name: 'Knee Deep!',
   cat: 'visual-novel',
@@ -490,7 +230,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose your love interest and make decisions that shape the story. Multiple routes and endings.',
   tags: ['visual novel', 'otome', 'yandere', 'romance', 'anime'],
 },
-{
+  {
   id: 'twilight-observer',
   name: 'Twilight Observer',
   cat: 'visual-novel',
@@ -504,7 +244,7 @@ const GAMES = [
   howto: 'Click to read dialogue. Pay close attention to character clues. Identify both killers early — every loop is a new chance.',
   tags: ['visual novel', 'mystery', 'horror', 'time loop', 'anime'],
 },
-{
+  {
   id: 'one-last-goodbye',
   name: 'One Last Goodbye',
   cat: 'visual-novel',
@@ -518,7 +258,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Make meaningful choices that shape the emotional ending of this heartfelt story.',
   tags: ['visual novel', 'anime', 'romance', 'emotional', 'drama'],
 },
-{
+  {
   id: 'cupids-kiss',
   name: "Cupid's Kiss",
   cat: 'dating-sim',
@@ -532,7 +272,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose options to increase affinity with characters and find your ideal ending.',
   tags: ['dating sim', 'romance', 'anime', 'cute', 'comedy'],
 },
-{
+  {
   id: 'requiems-echo',
   name: "Requiem's Echo",
   cat: 'visual-novel',
@@ -546,7 +286,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Pay attention to musical cues and character emotions. Your choices shape the resolution.',
   tags: ['visual novel', 'anime', 'music', 'mystery', 'atmospheric'],
 },
-{
+  {
   id: 'heartstop-tour',
   name: 'Heartstop Tour',
   cat: 'visual-novel',
@@ -561,7 +301,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose your path through the tour and build relationships with band members.',
   tags: ['visual novel', 'romance', 'anime', 'music', 'otome'],
 },
-{
+  {
   id: 'mindmindmind',
   name: 'Mind Mind Mind',
   cat: 'visual-novel',
@@ -575,7 +315,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Explore branching paths through a surreal mindscape. Not everything is as it seems.',
   tags: ['visual novel', 'anime', 'psychological', 'surreal', 'horror'],
 },
-{
+  {
   id: 'my-husband-stranger',
   name: 'My Husband is a Stranger',
   cat: 'visual-novel',
@@ -589,7 +329,7 @@ const GAMES = [
   howto: 'Click to advance the story. Piece together clues about your past through conversations and key choices.',
   tags: ['visual novel', 'anime', 'mystery', 'romance', 'drama'],
 },
-{
+  {
   id: 'summon-a-sweetheart',
   name: 'Summon a Sweetheart',
   cat: 'visual-novel',
@@ -603,21 +343,21 @@ const GAMES = [
   howto: 'Explore your room for gifts to give the monster. Different gifts lead to different (often terrible) outcomes. Find the good ending by giving the right gifts!',
   tags: ['visual novel', 'horror', 'comedy', 'romance', 'pixel art'],
 },
-{
+  {
   id: 'contract-demon',
   name: 'Contract Demon',
   cat: 'dating-sim',
   icon: '😈',
   badge: 'top',
   rating: 4.8,
-  itchId: '',
+  itchId: '393010',
   itchUrl: 'https://nomnomnami.itch.io/contract-demon',
   author: 'nomnomnami',
   desc: 'You accidentally summon a demon and now you have to live with him. A sweet and funny romance visual novel with gorgeous art and a charming cast of supernatural characters.',
   howto: 'Click to advance dialogue. Build your relationship with the demon through daily interactions and key story choices.',
   tags: ['dating sim', 'romance', 'anime', 'demon', 'comedy'],
 },
-{
+  {
   id: 'sweetest-valentine',
   name: 'Sweetest Valentine',
   cat: 'dating-sim',
@@ -631,7 +371,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose your responses to build the perfect romantic relationship before Valentines Day.',
   tags: ['dating sim', 'romance', 'anime', 'cute', 'valentines'],
 },
-{
+  {
   id: 'honey-dress-up',
   name: 'Honey Dress Up',
   cat: 'casual',
@@ -645,7 +385,7 @@ const GAMES = [
   howto: 'Click on items to try them on. Browse categories to find the perfect outfit combination. Save your favorite looks.',
   tags: ['casual', 'anime', 'dress-up', 'cute', 'fashion'],
 },
-{
+  {
   id: 'witch-you-want',
   name: 'Witch You Want',
   cat: 'visual-novel',
@@ -659,7 +399,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose which witch to spend time with and build your relationship through magical adventures.',
   tags: ['visual novel', 'romance', 'anime', 'fantasy', 'magic'],
 },
-{
+  {
   id: 'under-the-thorns',
   name: 'Under the Thorns',
   cat: 'visual-novel',
@@ -673,7 +413,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose your path carefully through this atmospheric dark romance with multiple endings.',
   tags: ['visual novel', 'romance', 'dark', 'anime', 'fantasy'],
 },
-{
+  {
   id: 'purarger-collector',
   name: 'Purarger Collector',
   cat: 'casual',
@@ -687,7 +427,7 @@ const GAMES = [
   howto: 'Click to collect cards. Complete sets to unlock new characters and rare cards. Build your ultimate collection.',
   tags: ['casual', 'anime', 'card game', 'collecting', 'cute'],
 },
-{
+  {
   id: 'honey-trap-burned',
   name: 'Honey Trap Burned',
   cat: 'visual-novel',
@@ -701,7 +441,7 @@ const GAMES = [
   howto: 'Click to advance the story. Gather clues and make careful decisions. Trust no one in this web of deception.',
   tags: ['visual novel', 'anime', 'mystery', 'romance', 'spy'],
 },
-{
+  {
   id: 'guidelicious',
   name: 'Guidelicious',
   cat: 'casual',
@@ -715,7 +455,7 @@ const GAMES = [
   howto: 'Follow the on-screen guides to complete each cooking step. Click at the right time for perfect results.',
   tags: ['casual', 'anime', 'cooking', 'cute', 'relaxing'],
 },
-{
+  {
   id: 'abo-speed-dating',
   name: 'ABO Speed Dating',
   cat: 'dating-sim',
@@ -729,7 +469,7 @@ const GAMES = [
   howto: 'Click through rapid dialogue exchanges. Choose your best responses to impress each date. Find your perfect match before time runs out!',
   tags: ['dating sim', 'romance', 'anime', 'comedy', 'supernatural'],
 },
-{
+  {
   id: 'penultima',
   name: 'Penultima',
   cat: 'visual-novel',
@@ -743,7 +483,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Make alchemical decisions that affect the world and your relationships. Multiple endings based on your choices.',
   tags: ['visual novel', 'fantasy', 'anime', 'dark', 'alchemy'],
 },
-{
+  {
   id: 'snow-white-vn',
   name: 'Snow White',
   cat: 'visual-novel',
@@ -757,7 +497,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Explore the reimagined fairy tale world and make choices that lead to different story outcomes.',
   tags: ['visual novel', 'anime', 'fairy tale', 'dark', 'romance'],
 },
-{
+  {
   id: 'evil-witch-cursed',
   name: 'I Became an Evil Witch',
   cat: 'visual-novel',
@@ -771,7 +511,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Choose how to play your role as the evil witch — go full villain or try to change the story.',
   tags: ['visual novel', 'anime', 'isekai', 'fantasy', 'romance'],
 },
-{
+  {
   id: 'gravity-failed-us',
   name: 'Gravity Failed Us',
   cat: 'visual-novel',
@@ -785,7 +525,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Navigate complex relationships and survival decisions aboard a failing space station.',
   tags: ['visual novel', 'anime', 'sci-fi', 'romance', 'drama'],
 },
-{
+  {
   id: 'going-live',
   name: 'Going Live',
   cat: 'visual-novel',
@@ -799,7 +539,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Manage your streaming career and build relationships with your community and fellow creators.',
   tags: ['visual novel', 'anime', 'slice of life', 'romance', 'comedy'],
 },
-{
+  {
   id: 'silver-thread-deux',
   name: 'Silver Thread Deux',
   cat: 'visual-novel',
@@ -813,7 +553,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Follow the threads of fate and make choices that weave your story toward love or loss.',
   tags: ['visual novel', 'romance', 'anime', 'fate', 'drama'],
 },
-{
+  {
   id: 'myosotis',
   name: 'Myosotis',
   cat: 'visual-novel',
@@ -827,7 +567,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Tend to your relationships carefully — what you remember, and what you forget, shapes the ending.',
   tags: ['visual novel', 'anime', 'romance', 'emotional', 'slice of life'],
 },
-{
+  {
   id: 'stranger-bus-stop',
   name: 'The Stranger from the Bus Stop',
   cat: 'visual-novel',
@@ -841,7 +581,7 @@ const GAMES = [
   howto: 'Click to advance the story. Notice the small details in each encounter — they all add up to something beautiful.',
   tags: ['visual novel', 'anime', 'slice of life', 'romance', 'mystery'],
 },
-{
+  {
   id: 'scratching-an-itch',
   name: 'Scratching an Itch',
   cat: 'visual-novel',
@@ -855,7 +595,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Enjoy the meta humor and make choices that shape this story about stories.',
   tags: ['visual novel', 'anime', 'comedy', 'meta', 'indie'],
 },
-{
+  {
   id: 'stay-with-me',
   name: 'Stay With Me',
   cat: 'visual-novel',
@@ -869,7 +609,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Savor each moment of this short but deeply affecting story about human connection.',
   tags: ['visual novel', 'anime', 'romance', 'slice of life', 'emotional'],
 },
-{
+  {
   id: 'toe-20-toe',
   name: 'Toe 2.0 Toe',
   cat: 'casual',
@@ -883,7 +623,7 @@ const GAMES = [
   howto: 'Follow the on-screen prompts. The gameplay is simple and intuitive — just enjoy the ride!',
   tags: ['casual', 'anime', 'comedy', 'cute', 'short'],
 },
-{
+  {
   id: 'hauoli',
   name: 'Hauoli',
   cat: 'visual-novel',
@@ -897,7 +637,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Enjoy the sunny atmosphere and make choices that lead to heartwarming outcomes.',
   tags: ['visual novel', 'anime', 'romance', 'tropical', 'wholesome'],
 },
-{
+  {
   id: 'sweet-valentine-chocolatier',
   name: 'Sweet Valentine Chocolatier',
   cat: 'dating-sim',
@@ -911,7 +651,7 @@ const GAMES = [
   howto: 'Click to serve customers and craft chocolates. Build relationships with regulars to unlock special romance routes.',
   tags: ['dating sim', 'romance', 'anime', 'cute', 'valentines'],
 },
-{
+  {
   id: 'i-hate-my-waifu',
   name: 'I Hate My Waifu Streamer',
   cat: 'visual-novel',
@@ -925,7 +665,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Navigate your complicated feelings about the streamer through daily interactions and key choices.',
   tags: ['visual novel', 'romance', 'anime', 'comedy', 'vtuber'],
 },
-{
+  {
   id: 'intertwine',
   name: 'Intertwine',
   cat: 'visual-novel',
@@ -939,7 +679,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Follow each character\'s perspective — the connections between them reveal themselves gradually.',
   tags: ['visual novel', 'anime', 'drama', 'romance', 'slice of life'],
 },
-{
+  {
   id: 'mirrors-curse',
   name: "A Mirror's Curse",
   cat: 'visual-novel',
@@ -953,7 +693,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Solve the mirror\'s riddles and make choices that break or deepen the curse.',
   tags: ['visual novel', 'fantasy', 'anime', 'dark', 'supernatural'],
 },
-{
+  {
   id: 'demon-lord-o2a2',
   name: 'Demon Lord O2A2',
   cat: 'visual-novel',
@@ -967,7 +707,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Enjoy this short comedic story about the misunderstood demon king.',
   tags: ['visual novel', 'anime', 'fantasy', 'comedy', 'short'],
 },
-{
+  {
   id: 'dermimis',
   name: 'Dermimis',
   cat: 'visual-novel',
@@ -981,7 +721,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Explore the duality of the protagonist through careful choices that reveal hidden truths.',
   tags: ['visual novel', 'anime', 'horror', 'dark', 'psychological'],
 },
-{
+  {
   id: 'not-a-creep',
   name: "I'm Not a Creep, I Promise",
   cat: 'visual-novel',
@@ -995,7 +735,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Try (and probably fail) to convince everyone you are perfectly normal and not suspicious at all.',
   tags: ['visual novel', 'anime', 'comedy', 'slice of life', 'short'],
 },
-{
+  {
   id: 'turned-into-girl',
   name: 'I Got Turned Into a Girl',
   cat: 'visual-novel',
@@ -1009,7 +749,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Make choices that shape how you adapt to your new situation and the relationships you build.',
   tags: ['visual novel', 'anime', 'comedy', 'romance', 'gender-bender'],
 },
-{
+  {
   id: 'heartburn-vn',
   name: 'Heartburn',
   cat: 'visual-novel',
@@ -1023,21 +763,21 @@ const GAMES = [
   howto: 'Click to advance dialogue. Navigate the forbidden romance and make choices that fan the flames or let them die out.',
   tags: ['visual novel', 'romance', 'anime', 'drama', 'emotional'],
 },
-{
+  {
   id: '10-minutes-dawn',
   name: '10 Minutes Till Dawn',
   cat: 'action',
   icon: '🌅',
   badge: 'top',
   rating: 4.8,
-  itchId: '',
+  itchId: '1495263',
   itchUrl: 'https://flanne.itch.io/10-minutes-till-dawn',
   author: 'flanne',
   desc: 'Survive 10 minutes against endless waves of monsters in this fast-paced anime roguelite shooter. Choose from multiple characters and weapons, build powerful synergies, and make it to dawn.',
   howto: 'WASD to move. Shooting is automatic. Collect XP to level up. Choose upgrades wisely to build a powerful combination. Survive until dawn!',
   tags: ['action', 'roguelite', 'anime', 'survival', 'shooter'],
 },
-{
+  {
   id: 'whale-island',
   name: 'The Whale Island',
   cat: 'visual-novel',
@@ -1051,7 +791,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Explore the whale island and uncover its ancient secrets through curiosity and kindness.',
   tags: ['visual novel', 'anime', 'fantasy', 'adventure', 'wholesome'],
 },
-{
+  {
   id: 'lovebyte-demo',
   name: 'LoveByte',
   cat: 'dating-sim',
@@ -1065,7 +805,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Build your relationship with AI companions through daily interactions and key story decisions.',
   tags: ['dating sim', 'anime', 'cyberpunk', 'sci-fi', 'romance'],
 },
-{
+  {
   id: 'babysitting-is-murder',
   name: 'Babysitting is Murder',
   cat: 'visual-novel',
@@ -1079,7 +819,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Make survival decisions carefully — some choices have deadly consequences in this comedic horror story.',
   tags: ['visual novel', 'horror', 'comedy', 'anime', 'mystery'],
 },
-{
+  {
   id: 'happiness-inc',
   name: 'Happiness Inc.',
   cat: 'visual-novel',
@@ -1093,7 +833,7 @@ const GAMES = [
   howto: 'Click to advance dialogue. Navigate your unusual job and make choices that question what it means to be truly happy.',
   tags: ['visual novel', 'anime', 'slice of life', 'drama', 'philosophical'],
 },
-{
+  {
   id: 'hook-line-love',
   name: 'Hook, Line, and Love',
   cat: 'dating-sim',
@@ -1107,109 +847,4 @@ const GAMES = [
   howto: 'Click to cast your line. Build relationships with the characters you meet at the fishing spot. Balance fishing and romance!',
   tags: ['dating sim', 'romance', 'anime', 'casual', 'wholesome'],
 },
-
 ];
-
-</script>
-<script>
-const params = new URLSearchParams(window.location.search);
-const gameId = params.get('id');
-const game = GAMES.find(g => g.id === gameId);
-
-if (!game) {
-  document.getElementById('notFound').style.display = 'block';
-} else {
-  // Update meta
-  document.title = `${game.name} — Play Free Online · AnimeGames.Online`;
-  document.querySelector('meta[name="description"]').content =
-    `Play ${game.name} free online. ${game.desc.slice(0, 120)}...`;
-
-  document.getElementById('breadcrumbGame').textContent = game.name;
-
-  // Related games (same cat, exclude current)
-  const related = GAMES.filter(g => g.cat === game.cat && g.id !== game.id).slice(0, 4);
-  const relatedOther = GAMES.filter(g => g.id !== game.id && !related.find(r => r.id === g.id)).slice(0, Math.max(0, 4 - related.length));
-  const relatedAll = [...related, ...relatedOther].slice(0, 4);
-
-  const relatedHTML = relatedAll.map(g => `
-    <div class="related-card" onclick="location.href='game.html?id=${g.id}'">
-      <div class="related-icon">${g.icon}</div>
-      <div class="related-info">
-        <div class="related-name">${g.name}</div>
-        <div class="related-meta">${g.cat} · ★ ${g.rating}</div>
-      </div>
-    </div>`).join('');
-
-  const embedHTML = game.itchId
-    ? `<div class="itch-embed"><iframe src="https://itch.io/embed/${game.itchId}" width="100%" height="167" frameborder="0"></iframe></div>`
-    : '';
-
-  const tagsHTML = game.tags.map(t => `<span class="tag">#${t}</span>`).join('');
-
-  document.getElementById('mainContent').innerHTML = `
-    <div class="game-main" style="animation: fadeUp 0.4s ease both">
-
-      <!-- AD TOP -->
-      <div class="ad-slot"><span class="ad-label">Advertisement</span></div>
-
-      <div class="game-header">
-        <div class="game-icon-title">
-          <div class="game-big-icon">${game.icon}</div>
-          <div>
-            <div class="game-title">${game.name}</div>
-            <div class="game-title-sub">
-              <span class="game-rating">★ ${game.rating}</span>
-              <span class="game-author">by ${game.author}</span>
-              <span class="game-cat-badge">${game.cat}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="play-area">
-        <div class="play-area-top">
-          <div class="play-area-title">🎮 Play ${game.name}</div>
-        </div>
-        <div class="play-content">
-          ${embedHTML}
-          <a class="play-btn-main" href="${game.itchUrl}">
-            ▶ Play Now — Free
-          </a>
-        </div>
-      </div>
-
-      <!-- AD MID -->
-      <div class="ad-mid"><span class="ad-label">Advertisement</span></div>
-
-      <div class="game-desc-section">
-        <div class="section-title">About the Game</div>
-        <div class="game-desc">${game.desc}</div>
-      </div>
-
-      <div class="game-desc-section">
-        <div class="section-title">How to Play</div>
-        <div class="howto">${game.howto}</div>
-      </div>
-
-      <div class="game-desc-section">
-        <div class="section-title">Tags</div>
-        <div class="tags-wrap">${tagsHTML}</div>
-      </div>
-
-    </div>
-
-    <div class="sidebar" style="animation: fadeUp 0.4s 0.1s ease both">
-      <div class="ad-sidebar"><span class="ad-label">Advertisement</span></div>
-
-      <div class="related-section">
-        <div class="related-title">More Games</div>
-        ${relatedHTML}
-      </div>
-
-      <div class="ad-sidebar2"><span class="ad-label">Advertisement</span></div>
-    </div>
-  `;
-}
-</script>
-</body>
-</html>
