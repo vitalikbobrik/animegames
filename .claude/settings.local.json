@@ -1,9 +1,10 @@
 {
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "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",
-    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "minimax/minimax-m2.5:free",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "minimax/minimax-m2.5:free",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "minimax/minimax-m2.5:free"
+  "permissions": {
+    "allow": [
+      "Bash(node *)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/vitalybobryk/.nvm/versions/**)",
+      "Bash(python3 *)"
+    ]
   }
 }
